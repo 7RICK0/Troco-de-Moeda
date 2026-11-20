@@ -1,0 +1,401 @@
+# Instancias pequenas aleatorias (com e sem moeda 1) para testes de corretude
+aleat_000 aleat aleatorio 31 4 29 27 22 1
+aleat_001 aleat aleatorio 22 3 13 9 7
+aleat_002 aleat aleatorio 32 3 26 24 13
+aleat_003 aleat aleatorio 21 1 24
+aleat_004 aleat aleatorio 34 1 18
+aleat_005 aleat aleatorio 56 3 15 10 5
+aleat_006 aleat aleatorio 23 5 28 23 12 10 1
+aleat_007 aleat aleatorio 37 4 29 14 13 3
+aleat_008 aleat aleatorio 51 5 28 17 16 14 4
+aleat_009 aleat aleatorio 16 5 30 29 17 16 13
+aleat_010 aleat aleatorio 33 4 30 19 17 16
+aleat_011 aleat aleatorio 14 1 19
+aleat_012 aleat aleatorio 45 2 27 2
+aleat_013 aleat aleatorio 27 5 29 23 22 20 4
+aleat_014 aleat aleatorio 54 4 29 16 8 5
+aleat_015 aleat aleatorio 44 1 21
+aleat_016 aleat aleatorio 34 4 30 23 22 16
+aleat_017 aleat aleatorio 19 3 22 18 13
+aleat_018 aleat aleatorio 51 5 26 23 21 17 16
+aleat_019 aleat aleatorio 17 4 27 14 10 7
+aleat_020 aleat aleatorio 9 1 2
+aleat_021 aleat aleatorio 23 5 30 26 17 16 15
+aleat_022 aleat aleatorio 31 2 23 9
+aleat_023 aleat aleatorio 51 4 27 25 17 16
+aleat_024 aleat aleatorio 53 4 30 22 18 2
+aleat_025 aleat aleatorio 51 3 30 15 11
+aleat_026 aleat aleatorio 44 1 15
+aleat_027 aleat aleatorio 53 5 30 15 14 9 6
+aleat_028 aleat aleatorio 31 4 29 21 9 3
+aleat_029 aleat aleatorio 54 3 24 7 4
+aleat_030 aleat aleatorio 5 4 30 15 5 1
+aleat_031 aleat aleatorio 37 1 15
+aleat_032 aleat aleatorio 12 5 30 27 26 20 3
+aleat_033 aleat aleatorio 2 2 20 4
+aleat_034 aleat aleatorio 9 5 25 22 21 12 9
+aleat_035 aleat aleatorio 42 1 11
+aleat_036 aleat aleatorio 44 5 30 28 25 19 16
+aleat_037 aleat aleatorio 30 2 18 8
+aleat_038 aleat aleatorio 18 5 29 23 20 17 5
+aleat_039 aleat aleatorio 42 1 14
+aleat_040 aleat aleatorio 50 2 30 5
+aleat_041 aleat aleatorio 9 5 26 17 14 13 10
+aleat_042 aleat aleatorio 24 5 26 13 7 4 1
+aleat_043 aleat aleatorio 53 1 2
+aleat_044 aleat aleatorio 49 3 30 21 12
+aleat_045 aleat aleatorio 32 1 1
+aleat_046 aleat aleatorio 20 4 22 15 11 10
+aleat_047 aleat aleatorio 60 1 16
+aleat_048 aleat aleatorio 9 4 26 20 19 6
+aleat_049 aleat aleatorio 29 5 20 17 14 11 7
+aleat_050 aleat aleatorio 25 5 23 22 18 8 3
+aleat_051 aleat aleatorio 41 1 7
+aleat_052 aleat aleatorio 34 2 21 2
+aleat_053 aleat aleatorio 55 1 15
+aleat_054 aleat aleatorio 43 2 23 16
+aleat_055 aleat aleatorio 41 1 5
+aleat_056 aleat aleatorio 10 5 29 26 17 7 5
+aleat_057 aleat aleatorio 27 2 13 9
+aleat_058 aleat aleatorio 11 5 28 14 13 10 3
+aleat_059 aleat aleatorio 31 3 15 9 6
+aleat_060 aleat aleatorio 33 4 15 11 10 6
+aleat_061 aleat aleatorio 33 4 26 17 15 4
+aleat_062 aleat aleatorio 13 3 28 27 4
+aleat_063 aleat aleatorio 56 2 3 1
+aleat_064 aleat aleatorio 50 4 21 18 14 11
+aleat_065 aleat aleatorio 54 2 12 1
+aleat_066 aleat aleatorio 43 2 18 12
+aleat_067 aleat aleatorio 45 5 26 20 18 7 4
+aleat_068 aleat aleatorio 46 3 25 19 18
+aleat_069 aleat aleatorio 36 2 19 10
+aleat_070 aleat aleatorio 6 3 22 18 5
+aleat_071 aleat aleatorio 6 3 14 6 4
+aleat_072 aleat aleatorio 22 1 25
+aleat_073 aleat aleatorio 32 2 21 4
+aleat_074 aleat aleatorio 4 3 27 19 9
+aleat_075 aleat aleatorio 16 3 30 11 6
+aleat_076 aleat aleatorio 55 3 14 3 1
+aleat_077 aleat aleatorio 6 3 14 2 1
+aleat_078 aleat aleatorio 7 2 10 1
+aleat_079 aleat aleatorio 35 1 22
+aleat_080 aleat aleatorio 29 5 30 28 25 12 11
+aleat_081 aleat aleatorio 25 5 30 23 21 20 2
+aleat_082 aleat aleatorio 27 3 20 15 7
+aleat_083 aleat aleatorio 23 1 22
+aleat_084 aleat aleatorio 60 5 30 22 13 10 9
+aleat_085 aleat aleatorio 27 3 24 23 2
+aleat_086 aleat aleatorio 44 1 10
+aleat_087 aleat aleatorio 51 3 25 24 10
+aleat_088 aleat aleatorio 49 1 10
+aleat_089 aleat aleatorio 34 4 29 19 11 1
+aleat_090 aleat aleatorio 46 3 18 7 2
+aleat_091 aleat aleatorio 39 1 6
+aleat_092 aleat aleatorio 2 1 4
+aleat_093 aleat aleatorio 38 2 17 12
+aleat_094 aleat aleatorio 8 3 19 14 1
+aleat_095 aleat aleatorio 49 3 14 13 8
+aleat_096 aleat aleatorio 11 4 25 22 8 5
+aleat_097 aleat aleatorio 43 5 30 23 22 18 1
+aleat_098 aleat aleatorio 14 5 29 26 13 9 5
+aleat_099 aleat aleatorio 17 1 1
+aleat_100 aleat aleatorio 60 5 16 14 11 9 5
+aleat_101 aleat aleatorio 41 5 27 18 6 3 2
+aleat_102 aleat aleatorio 48 5 27 21 17 11 9
+aleat_103 aleat aleatorio 0 3 27 22 2
+aleat_104 aleat aleatorio 14 2 16 2
+aleat_105 aleat aleatorio 55 5 30 29 28 24 5
+aleat_106 aleat aleatorio 35 4 26 23 12 8
+aleat_107 aleat aleatorio 23 3 28 11 7
+aleat_108 aleat aleatorio 51 3 21 18 15
+aleat_109 aleat aleatorio 19 4 29 26 22 19
+aleat_110 aleat aleatorio 26 2 21 6
+aleat_111 aleat aleatorio 0 2 29 16
+aleat_112 aleat aleatorio 26 3 27 23 17
+aleat_113 aleat aleatorio 11 1 21
+aleat_114 aleat aleatorio 23 1 10
+aleat_115 aleat aleatorio 57 5 24 23 9 5 4
+aleat_116 aleat aleatorio 13 1 18
+aleat_117 aleat aleatorio 33 5 19 18 13 10 2
+aleat_118 aleat aleatorio 5 2 17 4
+aleat_119 aleat aleatorio 21 2 24 13
+aleat_120 aleat aleatorio 42 5 24 19 10 9 2
+aleat_121 aleat aleatorio 18 2 29 6
+aleat_122 aleat aleatorio 8 3 18 12 10
+aleat_123 aleat aleatorio 54 4 24 21 7 1
+aleat_124 aleat aleatorio 49 5 26 21 16 14 12
+aleat_125 aleat aleatorio 34 5 24 17 11 6 1
+aleat_126 aleat aleatorio 56 2 6 1
+aleat_127 aleat aleatorio 42 1 17
+aleat_128 aleat aleatorio 23 1 27
+aleat_129 aleat aleatorio 19 1 12
+aleat_130 aleat aleatorio 38 2 18 5
+aleat_131 aleat aleatorio 6 5 16 11 8 5 4
+aleat_132 aleat aleatorio 16 1 13
+aleat_133 aleat aleatorio 58 5 21 16 12 10 4
+aleat_134 aleat aleatorio 53 4 18 17 8 4
+aleat_135 aleat aleatorio 58 3 27 22 15
+aleat_136 aleat aleatorio 49 5 26 25 16 12 3
+aleat_137 aleat aleatorio 14 3 25 22 9
+aleat_138 aleat aleatorio 32 2 14 11
+aleat_139 aleat aleatorio 54 5 30 29 24 22 11
+aleat_140 aleat aleatorio 51 4 13 11 7 6
+aleat_141 aleat aleatorio 22 4 30 28 23 8
+aleat_142 aleat aleatorio 37 3 27 26 14
+aleat_143 aleat aleatorio 36 4 24 15 7 5
+aleat_144 aleat aleatorio 21 2 14 9
+aleat_145 aleat aleatorio 17 1 11
+aleat_146 aleat aleatorio 17 4 21 18 9 5
+aleat_147 aleat aleatorio 35 2 11 5
+aleat_148 aleat aleatorio 18 1 9
+aleat_149 aleat aleatorio 45 5 21 18 15 13 1
+aleat_150 aleat aleatorio 6 3 22 14 11
+aleat_151 aleat aleatorio 60 4 30 28 22 21
+aleat_152 aleat aleatorio 21 5 21 17 14 12 7
+aleat_153 aleat aleatorio 25 1 30
+aleat_154 aleat aleatorio 35 2 9 1
+aleat_155 aleat aleatorio 41 3 19 11 5
+aleat_156 aleat aleatorio 54 5 27 26 25 16 14
+aleat_157 aleat aleatorio 14 4 25 11 2 1
+aleat_158 aleat aleatorio 54 1 22
+aleat_159 aleat aleatorio 13 3 25 11 1
+aleat_160 aleat aleatorio 23 4 21 20 17 9
+aleat_161 aleat aleatorio 44 1 18
+aleat_162 aleat aleatorio 0 2 25 18
+aleat_163 aleat aleatorio 21 1 5
+aleat_164 aleat aleatorio 38 2 15 7
+aleat_165 aleat aleatorio 5 2 23 10
+aleat_166 aleat aleatorio 35 5 23 22 19 17 14
+aleat_167 aleat aleatorio 17 2 4 1
+aleat_168 aleat aleatorio 32 4 24 18 6 2
+aleat_169 aleat aleatorio 42 2 30 16
+aleat_170 aleat aleatorio 30 3 20 12 11
+aleat_171 aleat aleatorio 53 3 29 16 11
+aleat_172 aleat aleatorio 8 3 21 16 2
+aleat_173 aleat aleatorio 51 1 16
+aleat_174 aleat aleatorio 29 3 27 25 9
+aleat_175 aleat aleatorio 32 2 12 9
+aleat_176 aleat aleatorio 52 4 19 10 7 2
+aleat_177 aleat aleatorio 42 4 28 24 21 3
+aleat_178 aleat aleatorio 30 5 28 25 22 18 10
+aleat_179 aleat aleatorio 31 5 28 20 17 11 3
+aleat_180 aleat aleatorio 11 3 22 12 11
+aleat_181 aleat aleatorio 55 1 18
+aleat_182 aleat aleatorio 60 2 25 9
+aleat_183 aleat aleatorio 59 5 28 21 17 13 4
+aleat_184 aleat aleatorio 32 5 15 14 8 7 1
+aleat_185 aleat aleatorio 17 5 28 26 17 7 5
+aleat_186 aleat aleatorio 54 4 27 22 18 5
+aleat_187 aleat aleatorio 34 3 21 13 12
+aleat_188 aleat aleatorio 35 5 24 20 18 7 5
+aleat_189 aleat aleatorio 8 2 24 5
+aleat_190 aleat aleatorio 50 5 28 26 22 9 2
+aleat_191 aleat aleatorio 17 3 27 6 5
+aleat_192 aleat aleatorio 11 5 23 15 12 6 5
+aleat_193 aleat aleatorio 11 1 25
+aleat_194 aleat aleatorio 39 2 21 14
+aleat_195 aleat aleatorio 14 4 30 18 10 1
+aleat_196 aleat aleatorio 43 5 29 18 15 12 3
+aleat_197 aleat aleatorio 32 4 29 23 11 5
+aleat_198 aleat aleatorio 0 1 16
+aleat_199 aleat aleatorio 22 1 4
+aleat_200 aleat aleatorio 48 5 28 27 23 11 9
+aleat_201 aleat aleatorio 32 1 6
+aleat_202 aleat aleatorio 5 2 28 27
+aleat_203 aleat aleatorio 53 4 27 22 14 7
+aleat_204 aleat aleatorio 31 2 22 8
+aleat_205 aleat aleatorio 34 2 12 6
+aleat_206 aleat aleatorio 23 4 28 24 15 14
+aleat_207 aleat aleatorio 47 2 21 10
+aleat_208 aleat aleatorio 5 4 30 20 18 16
+aleat_209 aleat aleatorio 7 2 24 7
+aleat_210 aleat aleatorio 45 1 12
+aleat_211 aleat aleatorio 27 5 23 21 7 6 4
+aleat_212 aleat aleatorio 1 2 29 14
+aleat_213 aleat aleatorio 17 5 30 29 26 21 5
+aleat_214 aleat aleatorio 0 3 24 13 12
+aleat_215 aleat aleatorio 53 4 29 17 15 9
+aleat_216 aleat aleatorio 50 3 16 5 4
+aleat_217 aleat aleatorio 22 2 18 8
+aleat_218 aleat aleatorio 3 4 21 20 19 13
+aleat_219 aleat aleatorio 29 5 25 22 11 9 3
+aleat_220 aleat aleatorio 33 4 27 26 18 12
+aleat_221 aleat aleatorio 5 5 27 10 9 4 2
+aleat_222 aleat aleatorio 36 5 30 17 15 3 2
+aleat_223 aleat aleatorio 51 1 13
+aleat_224 aleat aleatorio 9 5 20 18 16 15 1
+aleat_225 aleat aleatorio 25 3 5 4 1
+aleat_226 aleat aleatorio 34 1 6
+aleat_227 aleat aleatorio 4 3 24 2 1
+aleat_228 aleat aleatorio 21 5 29 28 24 17 4
+aleat_229 aleat aleatorio 15 2 16 10
+aleat_230 aleat aleatorio 44 3 29 23 15
+aleat_231 aleat aleatorio 32 2 13 8
+aleat_232 aleat aleatorio 15 3 16 14 2
+aleat_233 aleat aleatorio 37 5 25 15 7 6 4
+aleat_234 aleat aleatorio 1 4 19 17 16 13
+aleat_235 aleat aleatorio 33 4 24 13 7 2
+aleat_236 aleat aleatorio 55 4 26 10 8 5
+aleat_237 aleat aleatorio 47 5 28 25 14 11 9
+aleat_238 aleat aleatorio 10 5 28 20 17 12 1
+aleat_239 aleat aleatorio 37 5 26 19 12 7 4
+aleat_240 aleat aleatorio 10 1 18
+aleat_241 aleat aleatorio 25 4 26 14 13 4
+aleat_242 aleat aleatorio 12 1 8
+aleat_243 aleat aleatorio 48 1 9
+aleat_244 aleat aleatorio 58 2 17 9
+aleat_245 aleat aleatorio 59 3 9 6 3
+aleat_246 aleat aleatorio 45 1 7
+aleat_247 aleat aleatorio 2 5 29 22 18 15 4
+aleat_248 aleat aleatorio 53 3 29 23 15
+aleat_249 aleat aleatorio 12 5 30 29 28 21 2
+aleat_250 aleat aleatorio 41 4 10 6 3 2
+aleat_251 aleat aleatorio 13 1 9
+aleat_252 aleat aleatorio 39 1 10
+aleat_253 aleat aleatorio 59 1 16
+aleat_254 aleat aleatorio 46 3 29 23 3
+aleat_255 aleat aleatorio 34 5 21 19 18 17 6
+aleat_256 aleat aleatorio 3 2 27 16
+aleat_257 aleat aleatorio 5 5 18 15 13 12 8
+aleat_258 aleat aleatorio 26 2 2 1
+aleat_259 aleat aleatorio 39 4 22 18 15 3
+aleat_260 aleat aleatorio 10 2 8 6
+aleat_261 aleat aleatorio 17 5 25 17 13 11 7
+aleat_262 aleat aleatorio 1 2 15 3
+aleat_263 aleat aleatorio 8 3 25 24 3
+aleat_264 aleat aleatorio 52 5 28 27 25 17 8
+aleat_265 aleat aleatorio 51 4 28 23 22 5
+aleat_266 aleat aleatorio 7 3 18 16 6
+aleat_267 aleat aleatorio 24 2 27 1
+aleat_268 aleat aleatorio 31 1 23
+aleat_269 aleat aleatorio 60 4 22 19 17 11
+aleat_270 aleat aleatorio 37 3 24 22 3
+aleat_271 aleat aleatorio 16 1 21
+aleat_272 aleat aleatorio 56 2 13 4
+aleat_273 aleat aleatorio 43 2 20 10
+aleat_274 aleat aleatorio 34 5 24 22 19 10 6
+aleat_275 aleat aleatorio 21 1 1
+aleat_276 aleat aleatorio 37 2 23 15
+aleat_277 aleat aleatorio 42 1 8
+aleat_278 aleat aleatorio 59 4 25 20 17 6
+aleat_279 aleat aleatorio 39 4 5 4 3 1
+aleat_280 aleat aleatorio 28 5 14 10 9 5 1
+aleat_281 aleat aleatorio 28 5 21 13 10 5 1
+aleat_282 aleat aleatorio 51 5 27 15 11 8 4
+aleat_283 aleat aleatorio 24 1 28
+aleat_284 aleat aleatorio 60 3 25 24 15
+aleat_285 aleat aleatorio 39 3 24 15 9
+aleat_286 aleat aleatorio 52 4 28 16 11 10
+aleat_287 aleat aleatorio 35 2 20 4
+aleat_288 aleat aleatorio 13 1 7
+aleat_289 aleat aleatorio 14 3 25 23 13
+aleat_290 aleat aleatorio 14 3 26 6 4
+aleat_291 aleat aleatorio 34 4 21 20 11 5
+aleat_292 aleat aleatorio 58 4 20 18 10 7
+aleat_293 aleat aleatorio 55 5 23 18 13 12 9
+aleat_294 aleat aleatorio 2 4 17 10 8 6
+aleat_295 aleat aleatorio 27 5 28 27 10 7 6
+aleat_296 aleat aleatorio 43 5 21 16 15 13 5
+aleat_297 aleat aleatorio 19 1 20
+aleat_298 aleat aleatorio 38 1 26
+aleat_299 aleat aleatorio 14 5 27 18 14 11 10
+aleat_300 aleat aleatorio 42 5 29 27 26 17 10
+aleat_301 aleat aleatorio 33 5 27 25 17 13 12
+aleat_302 aleat aleatorio 33 2 14 1
+aleat_303 aleat aleatorio 23 4 30 29 20 13
+aleat_304 aleat aleatorio 24 2 19 18
+aleat_305 aleat aleatorio 6 3 28 24 1
+aleat_306 aleat aleatorio 31 2 7 6
+aleat_307 aleat aleatorio 32 5 27 16 14 13 6
+aleat_308 aleat aleatorio 34 2 12 1
+aleat_309 aleat aleatorio 7 1 4
+aleat_310 aleat aleatorio 29 2 13 4
+aleat_311 aleat aleatorio 26 5 29 21 17 12 4
+aleat_312 aleat aleatorio 57 2 11 10
+aleat_313 aleat aleatorio 56 1 4
+aleat_314 aleat aleatorio 21 1 25
+aleat_315 aleat aleatorio 26 2 21 15
+aleat_316 aleat aleatorio 6 1 21
+aleat_317 aleat aleatorio 35 2 28 26
+aleat_318 aleat aleatorio 5 4 20 11 6 4
+aleat_319 aleat aleatorio 29 3 15 8 5
+aleat_320 aleat aleatorio 35 1 30
+aleat_321 aleat aleatorio 43 4 25 5 3 1
+aleat_322 aleat aleatorio 31 4 29 15 14 3
+aleat_323 aleat aleatorio 30 1 15
+aleat_324 aleat aleatorio 26 3 24 4 2
+aleat_325 aleat aleatorio 4 2 21 14
+aleat_326 aleat aleatorio 15 3 23 18 17
+aleat_327 aleat aleatorio 54 4 12 6 4 1
+aleat_328 aleat aleatorio 19 2 26 20
+aleat_329 aleat aleatorio 50 3 26 25 14
+aleat_330 aleat aleatorio 14 1 23
+aleat_331 aleat aleatorio 26 3 30 25 3
+aleat_332 aleat aleatorio 49 1 19
+aleat_333 aleat aleatorio 55 5 28 20 14 11 9
+aleat_334 aleat aleatorio 33 5 27 24 20 10 8
+aleat_335 aleat aleatorio 16 2 17 14
+aleat_336 aleat aleatorio 39 1 18
+aleat_337 aleat aleatorio 26 3 17 15 10
+aleat_338 aleat aleatorio 49 3 30 23 7
+aleat_339 aleat aleatorio 19 5 27 17 15 12 6
+aleat_340 aleat aleatorio 38 3 28 10 4
+aleat_341 aleat aleatorio 12 2 30 1
+aleat_342 aleat aleatorio 40 5 30 24 23 20 11
+aleat_343 aleat aleatorio 21 1 22
+aleat_344 aleat aleatorio 38 4 21 20 15 14
+aleat_345 aleat aleatorio 52 4 28 22 12 4
+aleat_346 aleat aleatorio 20 4 25 22 19 15
+aleat_347 aleat aleatorio 22 5 25 24 13 12 1
+aleat_348 aleat aleatorio 23 3 26 16 1
+aleat_349 aleat aleatorio 55 4 20 15 2 1
+aleat_350 aleat aleatorio 7 3 26 18 2
+aleat_351 aleat aleatorio 19 3 14 13 9
+aleat_352 aleat aleatorio 4 3 7 2 1
+aleat_353 aleat aleatorio 45 2 6 2
+aleat_354 aleat aleatorio 34 3 30 28 20
+aleat_355 aleat aleatorio 33 4 22 20 18 4
+aleat_356 aleat aleatorio 26 5 28 10 5 4 2
+aleat_357 aleat aleatorio 4 2 23 4
+aleat_358 aleat aleatorio 50 1 26
+aleat_359 aleat aleatorio 55 1 19
+aleat_360 aleat aleatorio 35 4 27 15 5 2
+aleat_361 aleat aleatorio 49 1 25
+aleat_362 aleat aleatorio 35 3 30 14 12
+aleat_363 aleat aleatorio 19 4 30 14 7 2
+aleat_364 aleat aleatorio 59 2 21 9
+aleat_365 aleat aleatorio 4 5 23 20 13 6 2
+aleat_366 aleat aleatorio 28 4 27 19 16 14
+aleat_367 aleat aleatorio 18 2 26 1
+aleat_368 aleat aleatorio 8 1 26
+aleat_369 aleat aleatorio 33 4 24 15 9 7
+aleat_370 aleat aleatorio 51 5 25 11 7 6 5
+aleat_371 aleat aleatorio 12 3 29 4 1
+aleat_372 aleat aleatorio 0 4 28 13 12 3
+aleat_373 aleat aleatorio 17 3 22 19 3
+aleat_374 aleat aleatorio 19 5 11 9 8 7 3
+aleat_375 aleat aleatorio 14 5 27 23 18 4 3
+aleat_376 aleat aleatorio 8 4 28 26 18 12
+aleat_377 aleat aleatorio 35 2 7 5
+aleat_378 aleat aleatorio 16 3 22 13 4
+aleat_379 aleat aleatorio 11 5 25 21 16 12 7
+aleat_380 aleat aleatorio 40 3 30 16 3
+aleat_381 aleat aleatorio 3 5 26 20 18 10 5
+aleat_382 aleat aleatorio 17 5 30 28 24 12 8
+aleat_383 aleat aleatorio 9 4 30 21 10 2
+aleat_384 aleat aleatorio 50 3 29 15 13
+aleat_385 aleat aleatorio 19 1 7
+aleat_386 aleat aleatorio 43 1 9
+aleat_387 aleat aleatorio 19 4 16 11 10 3
+aleat_388 aleat aleatorio 53 2 30 23
+aleat_389 aleat aleatorio 4 1 30
+aleat_390 aleat aleatorio 56 3 25 14 3
+aleat_391 aleat aleatorio 59 2 21 7
+aleat_392 aleat aleatorio 20 5 27 21 11 7 1
+aleat_393 aleat aleatorio 31 1 9
+aleat_394 aleat aleatorio 47 5 27 22 18 14 11
+aleat_395 aleat aleatorio 36 5 27 22 12 8 2
+aleat_396 aleat aleatorio 27 4 30 23 22 16
+aleat_397 aleat aleatorio 41 1 21
+aleat_398 aleat aleatorio 34 3 28 12 7
+aleat_399 aleat aleatorio 22 3 21 18 17

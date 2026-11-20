@@ -1,0 +1,8 @@
+# saídas geradas (recriadas por scripts/rodar_tudo.py)
+build/
+saida_rapida/
+__pycache__/
+*.pyc
+*.class
+*.log
+.venv/
