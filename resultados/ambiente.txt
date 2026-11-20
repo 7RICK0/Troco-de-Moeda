@@ -1,0 +1,7 @@
+CPU: AMD Ryzen 7 7730U with Radeon Graphics
+RAM: 15.3 GiB
+Sistema operacional: Windows-11-10.0.26200-SP0
+Plano de energia: GUID do Esquema de Energia: 381b4222-f694-41f0-9685-ff5bb260df2e  (Equilibrado)
+Python: CPython 3.12.2 (sem flags)
+Java (execução): java version "25.0.1" 2025-10-21 LTS
+Java (compilador): javac 25.0.1 (flags: nenhuma; JIT HotSpot padrão)

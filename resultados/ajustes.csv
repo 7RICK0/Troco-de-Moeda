@@ -1,0 +1,17 @@
+linguagem,algoritmo,experimento,caso,variavel,pontos,expoente_tempo,expoente_razao_T_f
+java,guloso,E1,medio,V,9,0.0453,0.05111
+java,guloso,E2,medio,n,9,0.8871,-0.2764
+java,guloso,E2,melhor,n,9,-0.004623,-0.004623
+java,guloso,E2,pior,n,9,0.8742,-0.1258
+java,pd,E1,medio,V,9,1.096,0.03639
+java,pd,E2,medio,n,9,0.9576,-0.04126
+java,pd,E2,melhor,n,9,0.9438,-0.05463
+java,pd,E2,pior,n,9,0.9571,-0.04133
+python,guloso,E1,medio,V,9,0.0003281,0.006135
+python,guloso,E2,medio,n,9,0.7581,-0.4053
+python,guloso,E2,melhor,n,9,-0.01998,-0.01998
+python,guloso,E2,pior,n,9,0.78,-0.22
+python,pd,E1,medio,V,9,1.074,0.01416
+python,pd,E2,medio,n,9,0.9632,-0.03563
+python,pd,E2,melhor,n,9,0.9623,-0.03613
+python,pd,E2,pior,n,9,0.9638,-0.03464
