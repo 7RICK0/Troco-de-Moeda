@@ -34,7 +34,7 @@ Os dois foram implementados em **Python** e em **Java** (4 implementações), me
 | Testes de corretude | [testes/test_troco.py](testes/test_troco.py) |
 | Scripts dos gráficos | [scripts/graficos.py](scripts/graficos.py), [scripts/analisar_sistemas.py](scripts/analisar_sistemas.py) |
 | Resultados brutos | [resultados/](resultados/) |
-| Relatório PDF (7 itens, ambiente, contribuições) | [relatorio/](relatorio/) |
+| Relatório PDF (7 itens, ambiente, contribuições, declaração de uso de IA) | [relatorio/](relatorio/) |
 | README reprodutível | este arquivo · tudo roda com [scripts/rodar_tudo.py](scripts/rodar_tudo.py) |
 
 ## Pastas
@@ -76,6 +76,33 @@ python scripts/rodar_tudo.py            # completo, cerca de 30 min, regrava res
 
 Só os testes: `python -m unittest discover -s testes -v` (compila o Java sozinho).
 
+### Rodar cada parte separadamente
+
+Todos os comandos partem da raiz do repositório.
+
+```bash
+python scripts/gerar_entradas.py                       # recria entradas/ (semente 2026)
+
+javac -d build src/java/*.java                         # compila o Java
+java -cp build Medir tempo entradas/bench_V.txt saida_java.csv --reps 20
+python src/python/medir.py tempo entradas/bench_V.txt saida_python.csv --reps 20
+
+python scripts/graficos.py --resultados resultados --graficos graficos
+```
+
+Modos do medidor (iguais em Python e Java): `tempo` (cronometra), `memoria` (pico de memória de uma chamada) e `respostas` (só grava a resposta de cada algoritmo, usado nos testes). As opções `--max-V` e `--max-n` limitam o tamanho das instâncias para rodar mais rápido.
+
+### Formato dos arquivos de entrada
+
+Uma instância por linha; linhas que começam com `#` são comentários:
+
+```
+id experimento caso V n c1 c2 ... cn
+V_medio_00 E1 medio 1016 13 20000 10000 5000 2000 1000 500 200 100 50 25 10 5 1
+```
+
+As moedas vêm em ordem **decrescente** (pré-condição do guloso). A resposta é o menor número de moedas, ou `-1` quando não há como pagar V.
+
 ## Respostas às perguntas do enunciado
 
 1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.
@@ -84,7 +111,7 @@ Só os testes: `python -m unittest discover -s testes -v` (compila o Java sozinh
 4. **Aplicabilidade:** guloso em sistemas canônicos (real, euro, dólar), com qualquer V. PD em sistemas arbitrários com V moderado. Seção 4.
 5. **Simulação:** E1 varia V de 10³ a 10⁷ (9 tamanhos); E2 varia n de 4 a 1024 (9 tamanhos) nos 3 casos. Seção 5.
 6. **Gráficos e tabelas:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos e memória. Seção 6.
-7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP (o certificado são as quantidades) e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial**: polinomial no valor de V, exponencial no número de dígitos de V. Seção 7.
+7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP (o certificado são as quantidades) e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial**: polinomial no valor de V, exponencial no número de dígitos de V, então não prova que o problema está em P. **Problema vizinho:** troco no caso geral (moedas arbitrárias, V em binário), NP-difícil no sentido fraco; já o troco num sistema canônico fixo, como o real, está em P (guloso O(n)). O guloso não tem garantia de aproximação: em {1, k, k+1} com V = 2k usa k moedas contra 2. Seção 7.
 
 ## Resultados principais
 
