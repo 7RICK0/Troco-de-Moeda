@@ -42,8 +42,6 @@ Os dois algoritmos foram escritos em **Python** e em **Java** (4 implementaçõe
   </tr>
 </table>
 
-[Diagnóstico técnico e verificações finais](DIAGNOSTICO.md).
-
 ## Entregas
 
 | Exigência do enunciado | Onde está |
@@ -140,8 +138,6 @@ python scripts/rodar_tudo.py            # completo: E1/E2 + E3; duração depend
 ```
 
 Só o caso médio ampliado: `python scripts/estudar_caso_medio.py` (ou `--rapido` para demonstrar).
-
-Para atualizar a contagem de testes e o apêndice E3 do PDF após o estudo: `pip install -r requirements-relatorio.txt` e `python scripts/atualizar_relatorio.py`. O corpo com as medições originais é preservado.
 
 Só os testes: `python -m unittest discover -s testes -v` (compila o Java sozinho).
 
