@@ -21,15 +21,28 @@ RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(RAIZ, "src", "python"))
 from troco import ler_instancias  # noqa: E402
 
-ESTILO = {  # preto e branco: linguagem = traço, algoritmo = marcador
-    ("python", "pd"): dict(color="black", ls="-", marker="o"),
-    ("java", "pd"): dict(color="black", ls="--", marker="s"),
-    ("python", "guloso"): dict(color="0.5", ls="-", marker="^"),
-    ("java", "guloso"): dict(color="0.5", ls="--", marker="v"),
+AZUL, LARANJA = "#0072B2", "#D55E00"  # paleta que funciona para daltônicos
+VERDE, ROSA = "#009E73", "#CC79A7"
+ESTILO = {  # cor = linguagem, traço e marcador = algoritmo
+    ("python", "pd"): dict(color=AZUL, ls="-", marker="o"),
+    ("java", "pd"): dict(color=LARANJA, ls="-", marker="o"),
+    ("python", "guloso"): dict(color=AZUL, ls="--", marker="s"),
+    ("java", "guloso"): dict(color=LARANJA, ls="--", marker="s"),
 }
+ALG_COR = {"pd": dict(color=VERDE, ls="-", marker="o"), "guloso": dict(color=ROSA, ls="--", marker="s")}
 NOME = {"python": "Python", "java": "Java", "pd": "PD", "guloso": "Guloso"}
-plt.rcParams.update({"font.family": "Arial", "font.size": 9, "axes.grid": True,
-                     "grid.color": "0.85", "figure.dpi": 150})
+plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
+                     "font.size": 11, "axes.titlesize": 12, "axes.titleweight": "bold",
+                     "axes.grid": True, "grid.color": "0.88", "axes.spines.top": False,
+                     "axes.spines.right": False, "figure.dpi": 200,
+                     "legend.frameon": False})
+
+
+def reta_ref(ax, s, eixo, rotulo="referência: inclinação 1 (cresce na mesma proporção)"):
+    """Reta de inclinação 1 em log-log, paralela e logo abaixo da série s."""
+    xs = [l[eixo] for l in s]
+    y0 = s[0]["media_ns"] / 1e6 * 0.3
+    ax.plot(xs, [y0 * x / xs[0] for x in xs], color="0.35", ls=":", lw=1.6, label=rotulo)
 
 
 def passos_teoricos(alg, moedas, V):
@@ -128,14 +141,14 @@ def plot_linha(ax, s, eixo, ling, alg, rotulo=None, campo="media_ns", **extra):
     est = dict(ESTILO[(ling, alg)])
     est.update(extra)
     if campo == "media_ns":
-        ax.errorbar(xs, ys, yerr=[l["desvio_ns"] / 1e6 for l in s], ms=4, lw=1.2, capsize=2,
+        ax.errorbar(xs, ys, yerr=[l["desvio_ns"] / 1e6 for l in s], ms=6, lw=2, capsize=3,
                     label=rotulo or f"{NOME[alg]} ({NOME[ling]})", **est)
     else:
-        ax.plot(xs, ys, ms=4, lw=1.2, label=rotulo or f"{NOME[alg]} ({NOME[ling]})", **est)
+        ax.plot(xs, ys, ms=6, lw=2, label=rotulo or f"{NOME[alg]} ({NOME[ling]})", **est)
 
 
 def fig_teorico(linhas, pasta):
-    fig, axs = plt.subplots(1, 2, figsize=(9, 3.6))
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.8))
     for ax, exp, eixo, caso, algs in ((axs[0], "E1", "V", "medio", ["pd"]),
                                       (axs[1], "E2", "n", "pior", ["pd", "guloso"])):
         for ling in ("python", "java"):
@@ -148,45 +161,47 @@ def fig_teorico(linhas, pasta):
                     l["_norm"] = l["ns_por_passo"] / ref
                 plot_linha(ax, s, eixo, ling, alg, campo="_norm")
         ax.set_xscale("log")
-        ax.axhline(1, color="0.3", lw=0.8, ls=":")
+        ax.axhline(1, color="0.35", lw=1.2, ls=":")
         ax.set_ylim(0, max(2.0, ax.get_ylim()[1]))
-        ax.legend(fontsize=7)
+        ax.legend(fontsize=9)
     axs[0].set_title("(a) PD variando V (n = 13)")
-    axs[0].set_xlabel("V")
-    axs[0].set_ylabel("[T/f] ÷ [T/f no maior tamanho]")
-    axs[1].set_title("(b) Variando n (V ≈ 10^5, pior caso do guloso)")
+    axs[0].set_xlabel("V (valor a pagar)")
+    axs[0].set_ylabel("tempo ÷ passos previstos, relativo ao último ponto")
+    axs[1].set_title("(b) Variando n (V ≈ $10^5$, pior caso do guloso)")
     axs[1].set_xlabel("n (tipos de moeda)")
-    fig.suptitle("Teórico × medido: a razão T(x)/f(x) tende a uma constante (linha = 1)")
+    fig.suptitle("Teórico × medido: quando a razão fica perto de 1, a teoria está certa")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig1_teorico_vs_medido.png"))
     plt.close(fig)
 
 
 def fig_algoritmos(linhas, pasta):
-    fig, axs = plt.subplots(1, 2, figsize=(9, 3.8))
+    fig, axs = plt.subplots(1, 2, figsize=(12, 5.2))
     for ling in ("python", "java"):
         for alg in ("pd", "guloso"):
             plot_linha(axs[0], serie(linhas, ling, alg, "E1", "medio", "V"), "V", ling, alg)
             plot_linha(axs[1], serie(linhas, ling, alg, "E2", "pior", "n"), "n", ling, alg)
+    reta_ref(axs[0], serie(linhas, "java", "pd", "E1", "medio", "V"), "V")
+    reta_ref(axs[1], serie(linhas, "java", "pd", "E2", "pior", "n"), "n")
     for ax in axs:
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_ylabel("tempo por chamada (ms)")
     h, rot = axs[0].get_legend_handles_labels()
-    fig.legend(h, rot, loc="lower center", ncol=4, fontsize=8, frameon=False)
-    axs[0].set_xlabel("V")
-    axs[0].set_title("(a) Variando V (n = 13)", pad=28)
+    fig.legend(h, rot, loc="lower center", ncol=5, fontsize=10)
+    axs[0].set_xlabel("V (valor a pagar)")
+    axs[0].set_title("(a) Variando V (n = 13)", pad=34)
     eixo_digitos(axs[0])
     axs[1].set_xlabel("n (tipos de moeda)")
-    axs[1].set_title("(b) Variando n (V ≈ 10^5, pior caso do guloso)", pad=28)
-    fig.suptitle("Algoritmo × algoritmo (escala log-log)")
-    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    axs[1].set_title("(b) Variando n (V ≈ $10^5$, pior caso do guloso)", pad=34)
+    fig.suptitle("A PD cresce junto com V; o guloso quase não muda (escala log-log)", fontsize=13)
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     fig.savefig(os.path.join(pasta, "fig2_guloso_vs_pd.png"))
     plt.close(fig)
 
 
 def fig_linguagens(linhas, pasta):
-    fig, axs = plt.subplots(1, 2, figsize=(9, 3.4))
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.8))
     for ax, exp, eixo, caso in ((axs[0], "E1", "V", "medio"), (axs[1], "E2", "n", "pior")):
         for alg in ("pd", "guloso"):
             py = {l[eixo]: l["media_ns"] for l in serie(linhas, "python", alg, exp, caso, eixo)}
@@ -194,24 +209,25 @@ def fig_linguagens(linhas, pasta):
             xs = sorted(set(py) & set(jv))
             if xs:
                 ax.plot(xs, [py[x] / jv[x] for x in xs], label=NOME[alg],
-                        **ESTILO[("python", alg)], ms=4, lw=1.2)
+                        **ALG_COR[alg], ms=6, lw=2)
+        ax.axhline(1, color="0.35", lw=1.2, ls=":")
         ax.set_xscale("log")
         ax.set_yscale("log")
-        ax.legend(fontsize=7)
-        ax.set_ylabel("tempo Python ÷ tempo Java")
-    axs[0].set_xlabel("V")
+        ax.legend(fontsize=10)
+        ax.set_ylabel("tempo do Python ÷ tempo do Java (vezes)")
+    axs[0].set_xlabel("V (valor a pagar)")
     axs[0].set_title("(a) Variando V (n = 13)")
     axs[1].set_xlabel("n (tipos de moeda)")
     axs[1].set_title("(b) Variando n (pior caso do guloso)")
-    fig.suptitle("Linguagem × linguagem: quantas vezes o Python é mais lento")
+    fig.suptitle("Quantas vezes o Python é mais lento que o Java (acima de 1 = Python perde)")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig3_python_vs_java.png"))
     plt.close(fig)
 
 
 def fig_casos(linhas, pasta):
-    fig, axs = plt.subplots(1, 2, figsize=(9, 3.6))
-    tons = {"melhor": "0.65", "medio": "0.35", "pior": "black"}
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.8))
+    tons = {"melhor": VERDE, "medio": "#E69F00", "pior": "#CC3311"}
     marc = {"melhor": "^", "medio": "o", "pior": "v"}
     for ax, alg in ((axs[0], "guloso"), (axs[1], "pd")):
         for ling, ls in (("python", "-"), ("java", "--")):
@@ -223,10 +239,10 @@ def fig_casos(linhas, pasta):
         ax.set_yscale("log")
         ax.set_xlabel("n (tipos de moeda)")
         ax.set_ylabel("tempo por chamada (ms)")
-        ax.legend(fontsize=6.5, ncol=2)
+        ax.legend(fontsize=8.5, ncol=2)
     axs[0].set_title("(a) Guloso: melhor, médio e pior caso")
-    axs[1].set_title("(b) PD nas mesmas entradas")
-    fig.suptitle("Casos forçados (V ≈ 10^5, sistema {1, ..., n})")
+    axs[1].set_title("(b) PD nas mesmas entradas: os três casos coincidem")
+    fig.suptitle("Casos forçados (V ≈ $10^5$, moedas {1, ..., n}). Linha cheia = Python, tracejada = Java")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig4_casos.png"))
     plt.close(fig)
@@ -239,24 +255,24 @@ def fig_memoria(res, pasta):
             dados += list(csv.DictReader(f))
     if not dados:
         return []
-    fig, ax = plt.subplots(figsize=(5.5, 3.6))
+    fig, ax = plt.subplots(figsize=(8, 5))
     for ling in ("python", "java"):
         s = sorted((d for d in dados if d["linguagem"] == ling and d["algoritmo"] == "pd"),
                    key=lambda d: int(d["V"]))
         if s:
             ax.plot([int(d["V"]) for d in s], [int(d["bytes_pico"]) / 2 ** 20 for d in s],
-                    label=f"PD ({NOME[ling]}) medido", **ESTILO[(ling, "pd")], ms=4, lw=1.2)
+                    label=f"PD ({NOME[ling]}) medido", **ESTILO[(ling, "pd")], ms=6, lw=2)
     vs = sorted({int(d["V"]) for d in dados})
-    ax.plot(vs, [8 * (v + 1) / 2 ** 20 for v in vs], color="0.6", ls=":", lw=1.5,
-            label="teórico 8·(V+1) B (lista de ponteiros)")
-    ax.plot(vs, [4 * (v + 1) / 2 ** 20 for v in vs], color="0.6", ls="-.", lw=1.2,
-            label="teórico 4·(V+1) B (int[] do Java)")
+    ax.plot(vs, [8 * (v + 1) / 2 ** 20 for v in vs], color="0.45", ls=":", lw=1.8,
+            label="teórico 8·(V+1) bytes (lista de ponteiros)")
+    ax.plot(vs, [4 * (v + 1) / 2 ** 20 for v in vs], color="0.45", ls="-.", lw=1.5,
+            label="teórico 4·(V+1) bytes (int[] do Java)")
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.set_xlabel("V")
+    ax.set_xlabel("V (valor a pagar)")
     ax.set_ylabel("memória alocada (MiB)")
-    ax.set_title("Memória da PD: Θ(V)  (guloso: O(1))")
-    ax.legend(fontsize=7)
+    ax.set_title("Memória da PD cresce junto com V: Θ(V) (o guloso usa memória constante)")
+    ax.legend(fontsize=9)
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig5_memoria.png"))
     plt.close(fig)

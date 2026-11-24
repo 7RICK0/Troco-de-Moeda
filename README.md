@@ -1,22 +1,19 @@
 # Troco de moedas: guloso × programação dinâmica
 
-**CESAR School** · Ciência da Computação · **Teoria da Computação** · Prof. Daniel Bezerra · 2026.2
+**CESAR School** · Ciência da Computação · **Teoria da Computação** · Prof. Daniel Bezerra
 
-Equipe:
-- Erick Acioli Belo
-- José Braz
-- Luis Guilherme Alves
-- Júlio Cesar
-- João Luiz
+## O que é este projeto
 
-## Resumo
+Você precisa pagar um valor (por exemplo, R$ 0,30) usando o **menor número possível de moedas**. Com moedas de 25, 10, 5 e 1 centavo, a melhor resposta são 2 moedas: 25 + 5.
 
-Problema: pagar um valor V com o **menor número de moedas**, tendo n tipos de moeda à vontade.
+Escrevemos duas maneiras de resolver isso e comparamos as duas:
 
-- **Algoritmo A, guloso:** pega sempre a maior moeda que cabe. É rapidíssimo, mas só acerta em sistemas "canônicos", como o real.
-- **Algoritmo B, programação dinâmica (PD):** monta uma tabela com a melhor resposta para cada valor de 0 até V. Sempre acerta, mas o custo cresce com V.
+- **Algoritmo A, o guloso.** A regra é simples: "pegue sempre a maior moeda que cabe no que ainda falta pagar". Em 30 centavos, ele pega 25, sobram 5, pega 5 e termina. É muito rápido, porque olha cada tipo de moeda uma vez só. Só que **às vezes erra**. Com moedas de 1, 3 e 4 centavos e um valor de 6, ele pega 4 + 1 + 1 (3 moedas), mas o melhor seria 3 + 3 (2 moedas). Com o nosso sistema de moedas (o real), ele acerta sempre.
+- **Algoritmo B, a programação dinâmica (PD).** Ela resolve os valores pequenos primeiro e reaproveita as respostas nos maiores. Descobre o melhor jeito de pagar 1 centavo, depois 2, depois 3, e assim por diante até o valor pedido. Para cada valor, testa cada moeda e usa a resposta que já tinha anotado. **Sempre acerta**, mas demora mais quanto maior for o valor, porque precisa preencher essa lista inteira.
 
-Os dois foram implementados em **Python** e em **Java** (4 implementações), medidos sobre as mesmas entradas e comparados com a teoria.
+Em resumo: o guloso é rápido e às vezes erra, e a PD sempre acerta, mas é mais lenta. Medimos o tamanho dessa diferença.
+
+Os dois algoritmos foram escritos em **Python** e em **Java** (4 implementações), rodaram sobre as mesmas entradas e foram comparados com o que a teoria prevê.
 
 ## Links principais
 
@@ -58,12 +55,12 @@ Pense num caixa de supermercado. O **guloso** é o caixa experiente: pega a maio
 1. `gerar_entradas.py` cria as instâncias (valor V e lista de moedas) com semente fixa e grava em `entradas/`.
 2. As quatro implementações leem os mesmos arquivos.
 3. `medir.py` / `Medir.java` cronometram **só a chamada do algoritmo**, em lotes de N chamadas (N dobra até o lote durar ≥ 10 ms), com 20 repetições, aquecimento e descarte.
-4. `test_troco.py` confere: PD = força bruta, Java = Python, guloso = PD nos sistemas canônicos e guloso ≠ PD nos contraexemplos.
+4. `test_troco.py` confere: PD = força bruta, Java = Python, guloso = PD nos sistemas em que o guloso acerta (como o real) e guloso ≠ PD nos casos em que ele erra.
 5. `graficos.py` calcula média, desvio-padrão, razão T(n)/f(n), expoente log-log e desenha as figuras.
 
 ## Como reproduzir
 
-Pré-requisitos: Python 3.10+ e JDK 21+ (testado com Python 3.12.2 e Java 25.0.1) no PATH.
+Antes de começar, veja os [pré-requisitos](#pré-requisitos-para-executar) no fim deste arquivo.
 
 ```bash
 python -m venv .venv
@@ -108,7 +105,7 @@ As moedas vêm em ordem **decrescente** (pré-condição do guloso). A resposta 
 1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.
 2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) contando a ordenação. PD Θ(n·V) de tempo e Θ(V) de espaço. Seção 2.
 3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = o resto só zera na última moeda (n iterações); médio (n+1)/2 iterações. A PD não tem melhor nem pior caso. Seção 3.
-4. **Aplicabilidade:** guloso em sistemas canônicos (real, euro, dólar), com qualquer V. PD em sistemas arbitrários com V moderado. Seção 4.
+4. **Aplicabilidade:** guloso em sistemas de moedas em que ele acerta (real, euro, dólar), com qualquer V. PD em sistemas arbitrários com V moderado. Seção 4.
 5. **Simulação:** E1 varia V de 10³ a 10⁷ (9 tamanhos); E2 varia n de 4 a 1024 (9 tamanhos) nos 3 casos. Seção 5.
 6. **Gráficos e tabelas:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos e memória. Seção 6.
 7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP (o certificado são as quantidades) e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial**: polinomial no valor de V, exponencial no número de dígitos de V, então não prova que o problema está em P. **Problema vizinho:** troco no caso geral (moedas arbitrárias, V em binário), NP-difícil no sentido fraco; já o troco num sistema canônico fixo, como o real, está em P (guloso O(n)). O guloso não tem garantia de aproximação: em {1, k, k+1} com V = 2k usa k moedas contra 2. Seção 7.
@@ -129,7 +126,11 @@ Tempo médio por chamada, experimento E1 (sistema do real em centavos, n = 13, 2
 | 3.162.355 | 681,9 ns | 13,5 ns | 2,87 s | 19,89 ms |
 | 10.000.080 | 629,9 ns | 11,3 ns | 9,84 s | 78,55 ms |
 
-![Guloso × PD](graficos/fig2_guloso_vs_pd.png)
+[![Guloso × PD](graficos/fig2_guloso_vs_pd.png)](graficos/)
+
+[![Python × Java](graficos/fig3_python_vs_java.png)](graficos/)
+
+Clique em uma imagem para abrir a pasta com todos os gráficos.
 
 - PD: expoente log-log 1,07 (Python) e 1,10 (Java), perto do 1 previsto por Θ(n·V).
 - Guloso: tempo constante em V (expoente 0,00 / 0,05).
@@ -138,30 +139,36 @@ Tempo médio por chamada, experimento E1 (sistema do real em centavos, n = 13, 2
 
 **Limitações:**
 
-- Uma única máquina (notebook). Os tempos absolutos dependem dela; as tendências, não.
+- Os tempos absolutos dependem da máquina em que se roda; as tendências, não. A máquina usada nas medições está descrita no relatório.
 - A PD em Python vai só até V = 10⁷ por causa do tempo e da memória.
-- O guloso só foi medido em sistemas canônicos. Em sistemas não canônicos ele é igualmente rápido, mas erra (relatório, Tabela 2).
+- O guloso só foi medido em sistemas de moedas em que ele acerta. Nos outros ele é igualmente rápido, mas erra (relatório, Tabela 2).
 
 ## O que foi além do pedido e por quê
 
 | Extra | Por quê |
 |---|---|
 | Medição de memória e comparação com Θ(V) ([fig5](graficos/fig5_memoria.png)) | Bônus de até 0,5 previsto no enunciado |
-| Verificação automática de que os sistemas do benchmark são canônicos (limite de Kozen e Zaks) | Garante que as 4 implementações devem coincidir; reduz o risco de erro |
+| Verificação automática de que, nos sistemas de moedas do benchmark, o guloso acerta (limite de Kozen e Zaks) | Garante que as 4 implementações devem coincidir; reduz o risco de erro |
 | Análise de sistemas aleatórios ([scripts/analisar_sistemas.py](scripts/analisar_sistemas.py)) | Dá números concretos ao item 4 (com que frequência o guloso erra) |
 | Expoente do ajuste log-log ([resultados/ajustes.csv](resultados/ajustes.csv)) | Compara teoria e medição com um número, além do gráfico |
 | Modo `--rapido` | Qualquer pessoa confere a reprodução em cerca de 1 minuto |
 
-## Ambiente de execução
+## Pré-requisitos para executar
 
-- CPU: AMD Ryzen 7 7730U with Radeon Graphics
-- RAM: 15.3 GiB
-- Sistema operacional: Windows-11-10.0.26200-SP0
-- Plano de energia: GUID do Esquema de Energia: 381b4222-f694-41f0-9685-ff5bb260df2e  (Equilibrado)
-- Python: CPython 3.12.2 (sem flags)
-- Java (execução): java version "25.0.1" 2025-10-21 LTS
-- Java (compilador): javac 25.0.1 (flags: nenhuma; JIT HotSpot padrão)
+- **Python 3.10 ou mais novo**, com `python` e `pip` funcionando no terminal.
+- **JDK (Java) 21 ou mais novo**, com `java` e `javac` funcionando no terminal.
+- As bibliotecas `matplotlib` e `numpy`, instaladas com `pip install -r requirements.txt` (usadas só para os gráficos).
+- Windows, Linux ou macOS.
+- Para o modo completo, deixe o computador sem outros programas pesados abertos, porque o tempo medido depende disso. O modo `--rapido` não exige cuidado.
 
 ## Contribuições
 
 O que cada integrante fez e a declaração exigida pela disciplina estão nas seções 9 e 10 do [relatório](relatorio/relatorio_troco_de_moedas_v1.pdf).
+
+## Equipe
+
+- Erick Acioli Belo
+- José Braz
+- Luis Guilherme Alves
+- Júlio Cesar
+- João Luiz
