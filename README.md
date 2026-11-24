@@ -49,21 +49,20 @@ Os dois algoritmos foram escritos em **Python** e em **Java** (4 implementaçõe
 | 4 implementações (2 algoritmos × 2 linguagens) | [src/python/troco.py](src/python/troco.py), [src/java/Troco.java](src/java/Troco.java) |
 | Script de geração de entradas (semente fixa) | [scripts/gerar_entradas.py](scripts/gerar_entradas.py) → [entradas/](entradas/) |
 | Script de medição | [src/python/medir.py](src/python/medir.py), [src/java/Medir.java](src/java/Medir.java) |
-| Testes de corretude | [testes/test_troco.py](testes/test_troco.py) |
+| Testes de corretude | [testes/test_troco.py](testes/test_troco.py), [testes/test_experimentos.py](testes/test_experimentos.py) |
 | Scripts dos gráficos | [scripts/graficos.py](scripts/graficos.py), [scripts/analisar_sistemas.py](scripts/analisar_sistemas.py) |
-| Resultados brutos | [resultados/](resultados/) |
+| Resultados brutos | [resultados/](resultados/) (E1/E2) e [resultados/caso_medio/](resultados/caso_medio/) (E3) |
 | Relatório PDF (7 itens, ambiente, contribuições, declaração de uso de IA) | [relatorio/](relatorio/) |
 | README reprodutível | este arquivo · tudo roda com [scripts/rodar_tudo.py](scripts/rodar_tudo.py) |
 
 ## Pastas
-
-Estrutura dos experimentos originais (E1/E2); E3 acrescenta `scripts/estudar_caso_medio.py`, `scripts/validar_resultados.py`, `entradas/bench_medio.txt`, `testes/test_experimentos.py`, `resultados/caso_medio/` e `graficos/fig7_caso_medio.png`:
 
 ```
 .
 ├── README.md                          este arquivo
 ├── requirements.txt                   bibliotecas dos gráficos (matplotlib, numpy)
 ├── .gitignore                         ignora arquivos gerados (build/, caches, .venv/)
+├── .github/workflows/testes.yml       roda os testes no GitHub a cada push
 │
 ├── src/                               as 4 implementações e os medidores
 │   ├── python/
@@ -77,14 +76,18 @@ Estrutura dos experimentos originais (E1/E2); E3 acrescenta `scripts/estudar_cas
 │   ├── gerar_entradas.py              cria as entradas (semente fixa 2026)
 │   ├── rodar_tudo.py                  roda tudo de ponta a ponta (--rapido para a versão curta)
 │   ├── graficos.py                    gera resumo.csv, ajustes.csv e os gráficos
-│   └── analisar_sistemas.py           analisa sistemas de moedas aleatórios (quando o guloso erra)
+│   ├── analisar_sistemas.py           analisa sistemas de moedas aleatórios (quando o guloso erra)
+│   ├── estudar_caso_medio.py          experimento E3: caso médio com 20 entradas por tamanho
+│   └── validar_resultados.py          confere se os CSV têm todas as implementações e respostas iguais
 │
 ├── testes/
-│   └── test_troco.py                  testes automáticos: as 4 implementações dão a mesma resposta
+│   ├── test_troco.py                  corretude: força bruta, Java = Python, contraexemplos, limites
+│   └── test_experimentos.py           amostragem do E3, entradas inválidas e validação dos CSV
 │
 ├── entradas/                          instâncias lidas pelas 4 implementações
 │   ├── bench_V.txt                    experimento E1: varia o valor V
 │   ├── bench_n.txt                    experimento E2: varia o número de moedas n
+│   ├── bench_medio.txt                experimento E3: caso médio (semente 2027)
 │   ├── contraexemplos.txt             sistemas em que o guloso erra
 │   └── aleatorias.txt                 instâncias pequenas aleatórias (testes)
 │
@@ -98,7 +101,8 @@ Estrutura dos experimentos originais (E1/E2); E3 acrescenta `scripts/estudar_cas
 │   ├── resumo.csv                     média, desvio-padrão e razão T/f por tamanho
 │   ├── ajustes.csv                    expoentes log-log
 │   ├── sistemas_aleatorios.csv        resultado da análise de sistemas aleatórios
-│   └── ambiente.txt                   CPU, RAM, sistema e versões usadas
+│   ├── ambiente.txt                   CPU, RAM, sistema e versões usadas (E1/E2)
+│   └── caso_medio/                    E3: tempos brutos, resumos, ajustes e ambiente próprio
 │
 ├── graficos/                          figuras do relatório
 │   ├── fig1_teorico_vs_medido.png     razão T/f tende a uma constante
@@ -106,7 +110,8 @@ Estrutura dos experimentos originais (E1/E2); E3 acrescenta `scripts/estudar_cas
 │   ├── fig3_python_vs_java.png        linguagem × linguagem
 │   ├── fig4_casos.png                 melhor, médio e pior caso
 │   ├── fig5_memoria.png               uso de memória
-│   └── fig6_sistemas_pizza.png        em quantos sistemas o guloso nunca erra
+│   ├── fig6_sistemas_pizza.png        em quantos sistemas o guloso nunca erra
+│   └── fig7_caso_medio.png            caso médio ampliado (E3)
 │
 └── relatorio/
     ├── relatorio_troco_de_moedas_v1.pdf   relatório completo
@@ -188,7 +193,7 @@ O comando `python scripts/estudar_caso_medio.py` executa as quatro implementaç�
 - [Figura do caso médio](graficos/fig7_caso_medio.png): barras indicam desvio **entre entradas**, não intervalo de confiança.
 - [Expoentes ajustados](resultados/caso_medio/ajustes.csv): ajuste log-log das médias por tamanho.
 
-E1/E2 são os experimentos originais. E3 foi executado posteriormente em outro ambiente, descrito no arquivo próprio. Os gráficos comparam linguagens e algoritmos dentro do mesmo experimento; não se calculam razões entre máquinas diferentes. Nesta revisão, os dados anteriores não foram apagados nem sobrescritos. Executar novamente o comando completo substitui os CSV e gráficos gerados pelos novos tempos da máquina; o PDF registra as execuções publicadas e não muda automaticamente.
+E1/E2 são os experimentos originais. E3 foi executado posteriormente em outro ambiente, descrito no arquivo próprio. Os gráficos comparam linguagens e algoritmos dentro do mesmo experimento; não se calculam razões entre máquinas diferentes. Executar novamente o comando completo substitui os CSV e gráficos gerados pelos novos tempos da máquina; o PDF registra as execuções publicadas e não muda automaticamente.
 
 O modo `--rapido` do E3 usa 3 tamanhos, 2 entradas por tamanho e 3 repetições: serve apenas para conferir a reprodução, **não substitui** o experimento completo exigido pelo professor. O comando completo de `rodar_tudo.py` inclui E3 ao final. A validação rejeita entradas malformadas, falta de implementações, repetições ausentes ou duplicadas, tempos não finitos, metadados inconsistentes e respostas divergentes.
 
@@ -224,10 +229,7 @@ Clique em uma imagem para abrir a pasta com todos os gráficos.
 - E1/E2 preservam o experimento original, com uma entrada aleatória por tamanho. O estudo E3 amplia o caso médio para 20 entradas distintas em cada um de 7 tamanhos, com 20 repetições por entrada. E3 tem ambiente próprio registrado; seus tempos absolutos não são misturados aos de E1/E2.
 - A PD Java rejeita V negativo ou maior que Integer.MAX_VALUE - 2; mesmo dentro desse intervalo, a tabela precisa caber na memória. O maior V medido foi 10.000.080.
 - Os tempos do guloso Java são custos médios de chamadas em lote, sujeitos a otimizações do JIT; o acumulador não exclui todas essas otimizações. Não são uma medição de latência isolada nem uma comparação universal entre linguagens.
-- Os CSV publicados preservam a execução original descrita no relatório. Os ajustes de validação não modificam as transições da PD; uma nova execução produz seus próprios tempos.
-
-
-- Os tempos absolutos dependem da máquina em que se roda; as tendências, não. A máquina usada nas medições está descrita no relatório.
+- Os tempos absolutos dependem da máquina em que se roda; as tendências, não. As máquinas usadas estão descritas no relatório (seção 8 para E1/E2, seção 12 para E3), e uma nova execução produz seus próprios tempos.
 - A PD em Python vai só até V = 10⁷ por causa do tempo e da memória.
 - O guloso só foi medido em sistemas de moedas em que ele acerta. Nos outros ele é igualmente rápido, mas erra (relatório, Tabela 2).
 
@@ -239,6 +241,8 @@ Clique em uma imagem para abrir a pasta com todos os gráficos.
 | Verificação automática de que, nos sistemas de moedas do benchmark, o guloso acerta (limite de Kozen e Zaks) | Garante que as 4 implementações devem coincidir; reduz o risco de erro |
 | Análise de sistemas aleatórios ([scripts/analisar_sistemas.py](scripts/analisar_sistemas.py), [fig6](graficos/fig6_sistemas_pizza.png)) | Dá números concretos ao item 4 (com que frequência o guloso erra) |
 | Expoente do ajuste log-log ([resultados/ajustes.csv](resultados/ajustes.csv)) | Compara teoria e medição com um número, além do gráfico |
+| Caso médio ampliado E3 ([fig7](graficos/fig7_caso_medio.png), relatório seção 12) | Mede o caso médio com 20 entradas por tamanho, em vez de um único sorteio |
+| Testes automáticos no GitHub ([.github/workflows/testes.yml](.github/workflows/testes.yml)) | Cada push roda os testes de corretude em Python e Java |
 | Modo `--rapido` | Qualquer pessoa confere a reprodução em cerca de 1 minuto |
 
 ## Pré-requisitos para executar

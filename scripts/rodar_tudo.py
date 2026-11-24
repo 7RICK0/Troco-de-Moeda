@@ -1,7 +1,7 @@
 """Reproduz tudo: entradas, compilação, testes, medições, análise e gráficos.
 
-  python scripts/rodar_tudo.py            # completo (cerca de 30 min)
-  python scripts/rodar_tudo.py --rapido   # versão reduzida (cerca de 1 min), saída em saida_rapida/
+  python scripts/rodar_tudo.py            # completo: E1/E2 + E3 (a duração depende da máquina)
+  python scripts/rodar_tudo.py --rapido   # demonstração reduzida (cerca de 1 min), saída em saida_rapida/
 """
 import argparse
 import ctypes
