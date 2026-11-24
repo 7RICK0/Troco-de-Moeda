@@ -17,7 +17,8 @@ import java.util.Locale;
  *   memoria   <instancias> <saida.csv> [--max-V X] [--max-n Y]
  *   respostas <instancias> <saida.csv>
  *
- * Só a chamada do algoritmo é cronometrada (leitura e escrita ficam fora).
+ * Cronometra o lote de chamadas do algoritmo: o laço do lote e a soma das respostas entram na medida;
+ * leitura de arquivo e escrita do CSV ficam fora.
  */
 public final class Medir {
 

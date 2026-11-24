@@ -1,5 +1,7 @@
 """Gera a tabela-resumo (média, desvio, razão T/f, expoente ajustado) e os gráficos.
 
+fig1 e fig2: linhas (log-log e razão T/f); fig3: barras horizontais; fig4 e fig5: colunas; fig6: pizza.
+
   python scripts/graficos.py --resultados resultados --graficos graficos
 """
 import argparse
@@ -200,83 +202,132 @@ def fig_algoritmos(linhas, pasta):
     plt.close(fig)
 
 
+def _tempo_txt(ns):
+    for lim, div, un in ((1e3, 1, "ns"), (1e6, 1e3, "µs"), (1e9, 1e6, "ms")):
+        if ns < lim:
+            return f"{ns / div:.1f} {un}".replace(".", ",")
+    return f"{ns / 1e9:.2f} s".replace(".", ",")
+
+
+def _razoes(linhas, alg, exp, caso, eixo):
+    py = {l[eixo]: l["media_ns"] for l in serie(linhas, "python", alg, exp, caso, eixo)}
+    jv = {l[eixo]: l["media_ns"] for l in serie(linhas, "java", alg, exp, caso, eixo)}
+    return [py[x] / jv[x] for x in sorted(set(py) & set(jv))]
+
+
 def fig_linguagens(linhas, pasta):
-    fig, axs = plt.subplots(1, 2, figsize=(12, 4.8))
-    for ax, exp, eixo, caso in ((axs[0], "E1", "V", "medio"), (axs[1], "E2", "n", "pior")):
-        for alg in ("pd", "guloso"):
-            py = {l[eixo]: l["media_ns"] for l in serie(linhas, "python", alg, exp, caso, eixo)}
-            jv = {l[eixo]: l["media_ns"] for l in serie(linhas, "java", alg, exp, caso, eixo)}
-            xs = sorted(set(py) & set(jv))
-            if xs:
-                ax.plot(xs, [py[x] / jv[x] for x in xs], label=NOME[alg],
-                        **ALG_COR[alg], ms=6, lw=2)
-        ax.axhline(1, color="0.35", lw=1.2, ls=":")
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.legend(fontsize=10)
-        ax.set_ylabel("tempo do Python ÷ tempo do Java (vezes)")
-    axs[0].set_xlabel("V (valor a pagar)")
-    axs[0].set_title("(a) Variando V (n = 13)")
-    axs[1].set_xlabel("n (tipos de moeda)")
-    axs[1].set_title("(b) Variando n (pior caso do guloso)")
-    fig.suptitle("Quantas vezes o Python é mais lento que o Java (acima de 1 = Python perde)")
+    """Barras horizontais: quantas vezes o Python é mais lento (mediana entre E1 e E2)."""
+    grupos = []
+    for rot, alg in (("Programação dinâmica", "pd"), ("Guloso", "guloso")):
+        r = _razoes(linhas, alg, "E1", "medio", "V") + _razoes(linhas, alg, "E2", "pior", "n")
+        if r:
+            grupos.append((rot, r, ALG_COR[alg]["color"]))
+    if not grupos:
+        return
+    fig, ax = plt.subplots(figsize=(10, 3.4))
+    ys = list(range(len(grupos)))[::-1]
+    topo = max(max(r) for _, r, _ in grupos)
+    for y, (rot, r, cor) in zip(ys, grupos):
+        med = statistics.median(r)
+        ax.barh(y, med, color=cor, height=0.6)
+        ax.text(med + topo * 0.02, y, f"cerca de {med:.0f}× mais lento", va="center", fontsize=12, fontweight="bold")
+        ax.text(med + topo * 0.02, y - 0.22, f"(variou de {min(r):.0f}× a {max(r):.0f}× entre os tamanhos medidos)",
+                va="center", fontsize=9, color="0.35")
+    ax.set_yticks(ys)
+    ax.set_yticklabels([g[0] for g in grupos], fontsize=11)
+    ax.set_xlim(0, topo * 1.5)
+    n_tam = len(grupos[0][1])
+    ax.set_xlabel(f"quantas vezes o Python demorou mais que o Java (mediana entre os {n_tam} tamanhos de entrada medidos)")
+    ax.grid(axis="y", visible=False)
+    ax.set_title("O Python foi sempre mais lento que o Java, e muito mais na programação dinâmica")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig3_python_vs_java.png"))
     plt.close(fig)
 
 
 def fig_casos(linhas, pasta):
+    """Colunas agrupadas: melhor, médio e pior caso com o maior n de E2."""
+    nmax = max((l["n"] for l in linhas if l["experimento"] == "E2"), default=None)
+    if nmax is None:
+        return
+    rot_caso = {"melhor": "melhor", "medio": "médio", "pior": "pior"}
+    cores = {"melhor": VERDE, "medio": "#E69F00", "pior": "#CC3311"}
     fig, axs = plt.subplots(1, 2, figsize=(12, 4.8))
-    tons = {"melhor": VERDE, "medio": "#E69F00", "pior": "#CC3311"}
-    marc = {"melhor": "^", "medio": "o", "pior": "v"}
     for ax, alg in ((axs[0], "guloso"), (axs[1], "pd")):
-        for ling, ls in (("python", "-"), ("java", "--")):
-            for caso in ("melhor", "medio", "pior"):
-                s = serie(linhas, ling, alg, "E2", caso, "n")
-                plot_linha(ax, s, "n", ling, alg, rotulo=f"{caso} ({NOME[ling]})",
-                           color=tons[caso], marker=marc[caso], ls=ls)
-        ax.set_xscale("log")
+        for i, ling in enumerate(("python", "java")):
+            for j, caso in enumerate(("melhor", "medio", "pior")):
+                l = next(x for x in serie(linhas, ling, alg, "E2", caso, "n") if x["n"] == nmax)
+                x = i + (j - 1) * 0.27
+                v = l["media_ns"] / 1e6
+                ax.bar(x, v, width=0.25, color=cores[caso], label=rot_caso[caso] if i == 0 else None)
+                ax.text(x, v * 1.15, _tempo_txt(l["media_ns"]), ha="center", fontsize=8)
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(["Python", "Java"])
         ax.set_yscale("log")
-        ax.set_xlabel("n (tipos de moeda)")
-        ax.set_ylabel("tempo por chamada (ms)")
-        ax.legend(fontsize=8.5, ncol=2)
-    axs[0].set_title("(a) Guloso: melhor, médio e pior caso")
-    axs[1].set_title("(b) PD nas mesmas entradas: os três casos coincidem")
-    fig.suptitle("Casos forçados (V ≈ $10^5$, moedas {1, ..., n}). Linha cheia = Python, tracejada = Java")
+        ax.set_ylabel("tempo por chamada (ms, escala log)")
+        ax.grid(axis="x", visible=False)
+        ax.legend(title="caso", fontsize=9)
+    axs[0].set_title(f"(a) Guloso com n = {nmax}: o pior caso é bem mais lento")
+    axs[1].set_title("(b) PD nas mesmas entradas: os três casos empatam")
+    fig.suptitle("Casos forçados (moedas {1, ..., n}, V ≈ $10^5$)")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig4_casos.png"))
     plt.close(fig)
 
 
 def fig_memoria(res, pasta):
+    """Colunas da memória medida da PD, com a teoria marcada em cada V."""
     dados = []
     for arq in glob.glob(os.path.join(res, "memoria_*.csv")):
         with open(arq, encoding="utf-8") as f:
             dados += list(csv.DictReader(f))
     if not dados:
         return []
-    fig, ax = plt.subplots(figsize=(8, 5))
-    for ling in ("python", "java"):
-        s = sorted((d for d in dados if d["linguagem"] == ling and d["algoritmo"] == "pd"),
-                   key=lambda d: int(d["V"]))
-        if s:
-            ax.plot([int(d["V"]) for d in s], [int(d["bytes_pico"]) / 2 ** 20 for d in s],
-                    label=f"PD ({NOME[ling]}) medido", **ESTILO[(ling, "pd")], ms=6, lw=2)
     vs = sorted({int(d["V"]) for d in dados})
-    ax.plot(vs, [8 * (v + 1) / 2 ** 20 for v in vs], color="0.45", ls=":", lw=1.8,
-            label="teórico 8·(V+1) bytes (lista de ponteiros)")
-    ax.plot(vs, [4 * (v + 1) / 2 ** 20 for v in vs], color="0.45", ls="-.", lw=1.5,
-            label="teórico 4·(V+1) bytes (int[] do Java)")
-    ax.set_xscale("log")
+    med = {(d["linguagem"], int(d["V"])): int(d["bytes_pico"]) / 2 ** 20 for d in dados if d["algoritmo"] == "pd"}
+    fig, ax = plt.subplots(figsize=(11, 4.8))
+    xs = range(len(vs))
+    ax.bar([x - 0.2 for x in xs], [med[("python", v)] for v in vs], width=0.38, color=AZUL, label="PD Python (medido)")
+    ax.bar([x + 0.2 for x in xs], [med[("java", v)] for v in vs], width=0.38, color=LARANJA, label="PD Java (medido)")
+    ax.plot([x - 0.2 for x in xs], [8 * (v + 1) / 2 ** 20 for v in vs], "k_", ms=16, mew=2.2,
+            label="teórico Python 8·(V+1) bytes")
+    ax.plot([x + 0.2 for x in xs], [4 * (v + 1) / 2 ** 20 for v in vs], "_", color="0.4", ms=16, mew=2.2,
+            label="teórico Java 4·(V+1) bytes")
+    ax.set_xticks(list(xs))
+    ax.set_xticklabels([f"{v:,}".replace(",", ".") for v in vs], rotation=30, ha="right", fontsize=9)
     ax.set_yscale("log")
     ax.set_xlabel("V (valor a pagar)")
-    ax.set_ylabel("memória alocada (MiB)")
-    ax.set_title("Memória da PD cresce junto com V: Θ(V) (o guloso usa memória constante)")
+    ax.set_ylabel("memória alocada (MiB, escala log)")
+    ax.grid(axis="x", visible=False)
     ax.legend(fontsize=9)
+    ax.set_title("Memória da PD cresce junto com V e bate com a teoria Θ(V); o guloso usa memória constante")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig5_memoria.png"))
     plt.close(fig)
     return dados
+
+
+def fig_sistemas(res, pasta):
+    """Pizza: em quantos sistemas aleatórios de 3 moedas o guloso nunca erra."""
+    arq = os.path.join(res, "sistemas_aleatorios.csv")
+    if not os.path.exists(arq):
+        return
+    with open(arq, encoding="utf-8") as f:
+        sis = list(csv.DictReader(f))
+    s3 = sis[0]
+    ok = float(s3["pct_sistemas_canonicos"])
+    pc = lambda x: f"{x:.1f} %".replace(".", ",")  # noqa: E731
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.pie([ok, 100 - ok], colors=[VERDE, "#CC3311"], startangle=90, counterclock=False,
+           labels=["guloso nunca erra\n" + pc(ok), "guloso erra em algum valor\n" + pc(100 - ok)],
+           textprops=dict(fontsize=12), wedgeprops=dict(edgecolor="white", linewidth=2))
+    ax.set_title(f"{s3['sistemas']} sistemas sorteados com {s3['n']} moedas (V de 1 a 1.000)", fontsize=13)
+    outros = ", ".join(f"{s['n']} moedas: {pc(float(s['pct_sistemas_canonicos']))}" for s in sis[1:])
+    fig.text(0.5, 0.03, f"Com mais moedas fica ainda pior. O guloso nunca erra em {outros}.",
+             ha="center", fontsize=10, color="0.3")
+    fig.tight_layout(rect=(0, 0.07, 1, 1))
+    fig.savefig(os.path.join(pasta, "fig6_sistemas_pizza.png"))
+    plt.close(fig)
 
 
 def main():
@@ -297,6 +348,7 @@ def main():
     fig_linguagens(linhas, gra)
     fig_casos(linhas, gra)
     fig_memoria(res, gra)
+    fig_sistemas(res, gra)
     print(f"resumo.csv, ajustes.csv e figuras gravados em {a.resultados}/ e {a.graficos}/")
 
 

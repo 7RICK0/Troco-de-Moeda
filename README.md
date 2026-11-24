@@ -105,7 +105,8 @@ Estrutura completa do repositório:
 │   ├── fig2_guloso_vs_pd.png          algoritmo × algoritmo
 │   ├── fig3_python_vs_java.png        linguagem × linguagem
 │   ├── fig4_casos.png                 melhor, médio e pior caso
-│   └── fig5_memoria.png               uso de memória
+│   ├── fig5_memoria.png               uso de memória
+│   └── fig6_sistemas_pizza.png        em quantos sistemas o guloso nunca erra
 │
 └── relatorio/
     ├── relatorio_troco_de_moedas_v1.pdf   relatório completo
@@ -119,7 +120,7 @@ Pense num caixa de supermercado. O **guloso** é o caixa experiente: pega a maio
 
 1. `gerar_entradas.py` cria as instâncias (valor V e lista de moedas) com semente fixa e grava em `entradas/`.
 2. As quatro implementações leem os mesmos arquivos.
-3. `medir.py` / `Medir.java` cronometram **só a chamada do algoritmo**, em lotes de N chamadas (N dobra até o lote durar ≥ 10 ms), com 20 repetições, aquecimento e descarte.
+3. `medir.py` / `Medir.java` cronometram **o lote de chamadas do algoritmo** (o laço do lote e a soma das respostas entram; leitura e escrita ficam fora), em lotes de N chamadas (N dobra até o lote durar ≥ 10 ms), com 20 repetições, aquecimento e descarte.
 4. `test_troco.py` confere: PD = força bruta, Java = Python, guloso = PD nos sistemas em que o guloso acerta (como o real) e guloso ≠ PD nos casos em que ele erra.
 5. `graficos.py` calcula média, desvio-padrão, razão T(n)/f(n), expoente log-log e desenha as figuras.
 
@@ -214,7 +215,7 @@ Clique em uma imagem para abrir a pasta com todos os gráficos.
 |---|---|
 | Medição de memória e comparação com Θ(V) ([fig5](graficos/fig5_memoria.png)) | Bônus de até 0,5 previsto no enunciado |
 | Verificação automática de que, nos sistemas de moedas do benchmark, o guloso acerta (limite de Kozen e Zaks) | Garante que as 4 implementações devem coincidir; reduz o risco de erro |
-| Análise de sistemas aleatórios ([scripts/analisar_sistemas.py](scripts/analisar_sistemas.py)) | Dá números concretos ao item 4 (com que frequência o guloso erra) |
+| Análise de sistemas aleatórios ([scripts/analisar_sistemas.py](scripts/analisar_sistemas.py), [fig6](graficos/fig6_sistemas_pizza.png)) | Dá números concretos ao item 4 (com que frequência o guloso erra) |
 | Expoente do ajuste log-log ([resultados/ajustes.csv](resultados/ajustes.csv)) | Compara teoria e medição com um número, além do gráfico |
 | Modo `--rapido` | Qualquer pessoa confere a reprodução em cerca de 1 minuto |
 
