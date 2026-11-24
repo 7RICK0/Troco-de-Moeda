@@ -141,20 +141,89 @@ class TestJavaIgualPython(unittest.TestCase):
                 self.assertEqual(r, java[(id_, "pd")], f"{arq} {id_}")
 
 
-class TestResultadosMedidos(unittest.TestCase):
-    """Se o benchmark completo já rodou, as 4 implementações deram a mesma resposta em tudo."""
+def validar_cobertura_resultados(arquivos, instancias, repeticoes=20):
+    """Exige as quatro implementações e todas as repetições de cada entrada."""
+    esperados = {(i["id"], ling, alg)
+                 for i in instancias
+                 for ling in ("python", "java") for alg in ("guloso", "pd")}
+    encontrados = {}
+    respostas = {}
+    for arq in arquivos:
+        with open(arq, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                chave = (r["id"], r["linguagem"], r["algoritmo"])
+                rep = int(r["rep"])
+                reps = encontrados.setdefault(chave, set())
+                if rep in reps:
+                    raise AssertionError(f"repetição duplicada: {chave}, {rep}")
+                reps.add(rep)
+                respostas.setdefault(r["id"], set()).add(int(r["resposta"]))
+    if set(encontrados) != esperados:
+        raise AssertionError("cobertura incompleta ou inesperada das quatro implementações")
+    if any(reps != set(range(repeticoes)) for reps in encontrados.values()):
+        raise AssertionError("repetições ausentes ou inesperadas")
+    if any(len(valores) != 1 for valores in respostas.values()):
+        raise AssertionError("respostas divergentes nas implementações")
 
+
+class TestResultadosMedidos(unittest.TestCase):
     def test_respostas_iguais_nos_csv(self):
         arquivos = glob.glob(os.path.join(RAIZ, "resultados", "tempos_*.csv"))
-        if not arquivos:
-            self.skipTest("benchmark ainda não rodou")
-        respostas = {}
-        for arq in arquivos:
-            with open(arq, encoding="utf-8") as f:
-                for r in csv.DictReader(f):
-                    respostas.setdefault(r["id"], set()).add(int(r["resposta"]))
-        for id_, valores in respostas.items():
-            self.assertEqual(len(valores), 1, f"{id_}: {valores}")
+        instancias = [i for nome in ("bench_V.txt", "bench_n.txt")
+                      for i in ler_instancias(os.path.join(ENTRADAS, nome))]
+        validar_cobertura_resultados(arquivos, instancias)
+
+    def test_rejeita_resultados_incompletos(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as pasta:
+            arq = os.path.join(pasta, "parcial.csv")
+            with open(arq, "w", encoding="utf-8", newline="") as f:
+                f.write("id,linguagem,algoritmo,rep,resposta\n"
+                        "exemplo,python,pd,0,2\n")
+            with self.assertRaisesRegex(AssertionError, "cobertura"):
+                validar_cobertura_resultados([arq], [{"id": "exemplo"}])
+
+    def test_rejeita_repeticoes_ausentes(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as pasta:
+            arq = os.path.join(pasta, "parcial.csv")
+            with open(arq, "w", encoding="utf-8", newline="") as f:
+                f.write("id,linguagem,algoritmo,rep,resposta\n")
+                for ling in ("python", "java"):
+                    for alg in ("guloso", "pd"):
+                        f.write(f"exemplo,{ling},{alg},0,2\n")
+            with self.assertRaisesRegex(AssertionError, "repetições"):
+                validar_cobertura_resultados([arq], [{"id": "exemplo"}])
+
+
+class TestLimitesJava(unittest.TestCase):
+    def test_limites_pd_e_algoritmo_invalido(self):
+        import tempfile
+        fontes = glob.glob(os.path.join(RAIZ, "src", "java", "*.java"))
+        with tempfile.TemporaryDirectory() as pasta:
+            fonte = os.path.join(pasta, "Limites.java")
+            with open(fonte, "w", encoding="utf-8") as f:
+                f.write("""
+public class Limites {
+    public static void main(String[] args) {
+        for (int v : new int[] {-1, Integer.MAX_VALUE, Integer.MAX_VALUE - 1}) {
+            try {
+                Troco.pd(new int[] {1}, v);
+                throw new AssertionError("PD deveria rejeitar V=" + v);
+            } catch (IllegalArgumentException esperado) {}
+        }
+        try {
+            Troco.executar("invalido", new int[] {1}, 1);
+            throw new AssertionError("deveria rejeitar algoritmo desconhecido");
+        } catch (IllegalArgumentException esperado) {}
+        if (Troco.pd(new int[] {3, 1}, 0) != 0 ||
+            Troco.pd(new int[] {4, 3, 1}, 6) != 2)
+            throw new AssertionError("regressão nas entradas válidas");
+    }
+}
+""")
+            subprocess.run(["javac", "-d", pasta] + fontes + [fonte], check=True)
+            subprocess.run(["java", "-cp", pasta, "Limites"], check=True)
 
 
 if __name__ == "__main__":

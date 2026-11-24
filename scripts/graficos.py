@@ -132,7 +132,7 @@ def eixo_digitos(ax):
     sec.xaxis.set_major_locator(matplotlib.ticker.FixedLocator([3, 4, 5, 6, 7]))
     sec.xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%d"))
     sec.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
-    sec.set_xlabel("dígitos de V (o tamanho da entrada cresce com log V)")
+    sec.set_xlabel("log10(V) (o tamanho da entrada cresce com log V)")
 
 
 def plot_linha(ax, s, eixo, ling, alg, rotulo=None, campo="media_ns", **extra):
@@ -171,7 +171,7 @@ def fig_teorico(linhas, pasta):
     axs[0].set_ylabel("tempo ÷ passos previstos, relativo ao último ponto")
     axs[1].set_title("(b) Variando n (V ≈ $10^5$, pior caso do guloso)")
     axs[1].set_xlabel("n (tipos de moeda)")
-    fig.suptitle("Teórico × medido: quando a razão fica perto de 1, a teoria está certa")
+    fig.suptitle("Teórico × medido: a estabilização da razão é compatível com o crescimento previsto")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig1_teorico_vs_medido.png"))
     plt.close(fig)
@@ -239,7 +239,7 @@ def fig_linguagens(linhas, pasta):
     n_tam = len(grupos[0][1])
     ax.set_xlabel(f"quantas vezes o Python demorou mais que o Java (mediana entre os {n_tam} tamanhos de entrada medidos)")
     ax.grid(axis="y", visible=False)
-    ax.set_title("O Python foi sempre mais lento que o Java, e muito mais na programação dinâmica")
+    ax.set_title("Nestas medições, o Python foi mais lento que o Java")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig3_python_vs_java.png"))
     plt.close(fig)
@@ -268,7 +268,7 @@ def fig_casos(linhas, pasta):
         ax.grid(axis="x", visible=False)
         ax.legend(title="caso", fontsize=9)
     axs[0].set_title(f"(a) Guloso com n = {nmax}: o pior caso é bem mais lento")
-    axs[1].set_title("(b) PD nas mesmas entradas: os três casos empatam")
+    axs[1].set_title("(b) PD: tempos próximos nas entradas selecionadas")
     fig.suptitle("Casos forçados (moedas {1, ..., n}, V ≈ $10^5$)")
     fig.tight_layout()
     fig.savefig(os.path.join(pasta, "fig4_casos.png"))

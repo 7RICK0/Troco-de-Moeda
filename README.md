@@ -169,8 +169,8 @@ As moedas vêm em ordem **decrescente** (pré-condição do guloso). A resposta 
 ## Respostas às perguntas do enunciado
 
 1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.
-2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) contando a ordenação. PD Θ(n·V) de tempo e Θ(V) de espaço. Seção 2.
-3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = o resto só zera na última moeda (n iterações); médio (n+1)/2 iterações. A PD não tem melhor nem pior caso. Seção 3.
+2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) contando a ordenação. PD O(n·V) de tempo, Θ(n·V) quando todas as moedas são ≤ V/2, e Θ(V) de espaço. Seção 2.
+3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = o resto só zera na última moeda (n iterações); médio (n+1)/2 iterações. Para C e V fixos, a quantidade de iterações da PD é determinada; mudar as denominações pode mudar o trabalho. Seção 3.
 4. **Aplicabilidade:** guloso em sistemas de moedas em que ele acerta (real, euro, dólar), com qualquer V. PD em sistemas arbitrários com V moderado. Seção 4.
 5. **Simulação:** E1 varia V de 10³ a 10⁷ (9 tamanhos); E2 varia n de 4 a 1024 (9 tamanhos) nos 3 casos. Seção 5.
 6. **Gráficos e tabelas:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos e memória. Seção 6.
@@ -204,6 +204,12 @@ Clique em uma imagem para abrir a pasta com todos os gráficos.
 - Na PD o Python foi de 125 a 204 vezes mais lento que o Java. A constante muda; o expoente, não.
 
 **Limitações:**
+
+- O caso médio experimental usa uma entrada sorteada por tamanho. As 20 repetições medem o ruído temporal dessa entrada, não a média sobre várias entradas.
+- A PD Java rejeita V negativo ou maior que Integer.MAX_VALUE - 2; mesmo dentro desse intervalo, a tabela precisa caber na memória. O maior V medido foi 10.000.080.
+- Os tempos do guloso Java são custos médios de chamadas em lote, sujeitos a otimizações do JIT; o acumulador não exclui todas essas otimizações. Não são uma medição de latência isolada nem uma comparação universal entre linguagens.
+- Os CSV publicados preservam a execução original descrita no relatório. Os ajustes de validação não modificam as transições da PD; uma nova execução produz seus próprios tempos.
+
 
 - Os tempos absolutos dependem da máquina em que se roda; as tendências, não. A máquina usada nas medições está descrita no relatório.
 - A PD em Python vai só até V = 10⁷ por causa do tempo e da memória.

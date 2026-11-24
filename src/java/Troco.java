@@ -31,6 +31,11 @@ public final class Troco {
      * dp[v] = menor número de moedas para pagar v.
      */
     public static int pd(int[] moedas, int V) {
+        // Reserva margem para o sentinela e para dp[v - c] + 1.
+        // A alocação da tabela também depende da memória disponível.
+        if (V < 0 || V > Integer.MAX_VALUE - 2) {
+            throw new IllegalArgumentException("V fora do intervalo suportado pela PD");
+        }
         int infinito = V + 1;
         int[] dp = new int[V + 1];
         java.util.Arrays.fill(dp, infinito);
@@ -47,6 +52,10 @@ public final class Troco {
     }
 
     public static int executar(String algoritmo, int[] moedas, int V) {
-        return "guloso".equals(algoritmo) ? guloso(moedas, V) : pd(moedas, V);
+        return switch (algoritmo) {
+            case "guloso" -> guloso(moedas, V);
+            case "pd" -> pd(moedas, V);
+            default -> throw new IllegalArgumentException("algoritmo desconhecido: " + algoritmo);
+        };
     }
 }
