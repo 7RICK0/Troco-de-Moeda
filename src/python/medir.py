@@ -59,13 +59,17 @@ def modo_tempo(instancias, saida, reps):
                 moedas, V = inst["moedas"], inst["V"]
                 resposta = alg(moedas, V)
                 gc.collect()
+                gc_ativo = gc.isenabled()
                 gc.disable()
-                lote = calibrar(alg, moedas, V)
-                for _ in range(AQUECIMENTO):
-                    medir_lote(alg, moedas, V, lote)
-                tempos = [medir_lote(alg, moedas, V, lote) / lote
-                          for _ in range(reps)]
-                gc.enable()
+                try:
+                    lote = calibrar(alg, moedas, V)
+                    for _ in range(AQUECIMENTO):
+                        medir_lote(alg, moedas, V, lote)
+                    tempos = [medir_lote(alg, moedas, V, lote) / lote
+                              for _ in range(reps)]
+                finally:
+                    if gc_ativo:
+                        gc.enable()
                 for r, t in enumerate(tempos):
                     w.writerow(["python", nome, inst["experimento"],
                                 inst["caso"], inst["id"], inst["n"], V,
@@ -112,7 +116,11 @@ def main():
     p.add_argument("--max-V", type=int, default=None)
     p.add_argument("--max-n", type=int, default=None)
     a = p.parse_args()
+    if a.reps < 1 or (a.max_V is not None and a.max_V < 0) or (a.max_n is not None and a.max_n < 1):
+        p.error("repetições e limites inválidos")
     inst = filtrar(ler_instancias(a.instancias), a.max_V, a.max_n)
+    if not inst:
+        p.error("nenhuma entrada selecionada")
     if a.modo == "tempo":
         modo_tempo(inst, a.saida, a.reps)
     elif a.modo == "memoria":

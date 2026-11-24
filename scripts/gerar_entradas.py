@@ -2,6 +2,7 @@
 
 Formato de cada linha: id experimento caso V n c1 ... cn  (moedas em ordem decrescente)
 """
+import argparse
 import os
 import random
 
@@ -17,6 +18,9 @@ TAMANHOS_V = [round(10 ** (3 + 0.5 * j)) for j in range(9)]  # 10^3 ... 10^7
 # E2: varia n dobrando, V perto de 10^5, sistema {1, 2, ..., n}
 TAMANHOS_N = [2 ** k for k in range(2, 11)]  # 4 ... 1024
 V_BASE = 100_000
+TAMANHOS_MEDIO = [2 ** k for k in range(2, 9)]
+AMOSTRAS_MEDIO = 20
+V_MEDIO = 10_000
 
 # Sistemas não canônicos: o guloso erra (resultado esperado conhecido)
 CONTRAEXEMPLOS = [
@@ -73,17 +77,33 @@ def gerar_aleatorias(rng, quantidade=400):
     return linhas
 
 
+def gerar_bench_medio():
+    """20 valores distintos por n, amostrados sem reposição; restos uniformes na população."""
+    rng = random.Random(SEMENTE + 1)
+    linhas = ["# E3: caso medio, 7 tamanhos, 20 entradas distintas por tamanho, semente 2027",
+              "# V perto de 10000; intervalo com 10*n valores, alinhado a multiplos de n"]
+    for n in TAMANHOS_MEDIO:
+        inicio = (V_MEDIO // n - 5) * n
+        for j, V in enumerate(rng.sample(range(inicio, inicio + 10 * n), AMOSTRAS_MEDIO)):
+            linhas.append(linha(f"medio_{n:04d}_{j:02d}", "E3", "medio", V, list(range(1, n + 1))))
+    return linhas
+
+
 def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--saida", default=PASTA)
+    pasta = p.parse_args().saida
     rng = random.Random(SEMENTE)
-    os.makedirs(PASTA, exist_ok=True)
+    os.makedirs(pasta, exist_ok=True)
     arquivos = {
         "bench_V.txt": gerar_bench_V(rng),
         "bench_n.txt": gerar_bench_n(rng),
         "contraexemplos.txt": gerar_contraexemplos(),
         "aleatorias.txt": gerar_aleatorias(rng),
+        "bench_medio.txt": gerar_bench_medio(),
     }
     for nome, linhas in arquivos.items():
-        with open(os.path.join(PASTA, nome), "w", encoding="utf-8", newline="\n") as f:
+        with open(os.path.join(pasta, nome), "w", encoding="utf-8", newline="\n") as f:
             f.write("\n".join(linhas) + "\n")
         print(f"entradas/{nome}: {len(linhas) - sum(l.startswith('#') for l in linhas)} instancias")
 

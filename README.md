@@ -42,6 +42,8 @@ Os dois algoritmos foram escritos em **Python** e em **Java** (4 implementaçõe
   </tr>
 </table>
 
+[Diagnóstico técnico e verificações finais](DIAGNOSTICO.md).
+
 ## Entregas
 
 | Exigência do enunciado | Onde está |
@@ -57,7 +59,7 @@ Os dois algoritmos foram escritos em **Python** e em **Java** (4 implementaçõe
 
 ## Pastas
 
-Estrutura completa do repositório:
+Estrutura dos experimentos originais (E1/E2); E3 acrescenta `scripts/estudar_caso_medio.py`, `scripts/validar_resultados.py`, `entradas/bench_medio.txt`, `testes/test_experimentos.py`, `resultados/caso_medio/` e `graficos/fig7_caso_medio.png`:
 
 ```
 .
@@ -133,9 +135,13 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate    |    Linux/macOS: source .venv/bin/activate
 pip install -r requirements.txt
 
-python scripts/rodar_tudo.py --rapido   # versão reduzida, cerca de 1 min, saída em saida_rapida/
-python scripts/rodar_tudo.py            # completo, cerca de 30 min, regrava resultados/ e graficos/
+python scripts/rodar_tudo.py --rapido   # demonstração reduzida, saída em saida_rapida/
+python scripts/rodar_tudo.py            # completo: E1/E2 + E3; duração depende da máquina
 ```
+
+Só o caso médio ampliado: `python scripts/estudar_caso_medio.py` (ou `--rapido` para demonstrar).
+
+Para atualizar a contagem de testes e o apêndice E3 do PDF após o estudo: `pip install -r requirements-relatorio.txt` e `python scripts/atualizar_relatorio.py`. O corpo com as medições originais é preservado.
 
 Só os testes: `python -m unittest discover -s testes -v` (compila o Java sozinho).
 
@@ -164,17 +170,31 @@ id experimento caso V n c1 c2 ... cn
 V_medio_00 E1 medio 1016 13 20000 10000 5000 2000 1000 500 200 100 50 25 10 5 1
 ```
 
-As moedas vêm em ordem **decrescente** (pré-condição do guloso). A resposta é o menor número de moedas, ou `-1` quando não há como pagar V.
+As moedas vêm em ordem **decrescente** (pré-condição do guloso). A PD devolve o menor número de moedas, ou `-1` se não há solução. O guloso devolve sua escolha; em sistemas não canônicos pode usar moedas a mais ou retornar `-1` mesmo existindo solução. O leitor compartilhado exige V entre 0 e 2³¹ − 3, moedas positivas, distintas, decrescentes, quantidade n correta e IDs únicos.
 
 ## Respostas às perguntas do enunciado
 
 1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.
 2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) contando a ordenação. PD O(n·V) de tempo, Θ(n·V) quando todas as moedas são ≤ V/2, e Θ(V) de espaço. Seção 2.
-3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = o resto só zera na última moeda (n iterações); médio (n+1)/2 iterações. Para C e V fixos, a quantidade de iterações da PD é determinada; mudar as denominações pode mudar o trabalho. Seção 3.
+3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = o resto só zera na última moeda (n iterações); médio (n+1)/2 iterações no sistema {1,…,n}, com resto uniforme e V positivo. Para C e V fixos, a quantidade de iterações da PD é determinada; mudar as denominações pode mudar o trabalho. Seção 3.
 4. **Aplicabilidade:** guloso em sistemas de moedas em que ele acerta (real, euro, dólar), com qualquer V. PD em sistemas arbitrários com V moderado. Seção 4.
-5. **Simulação:** E1 varia V de 10³ a 10⁷ (9 tamanhos); E2 varia n de 4 a 1024 (9 tamanhos) nos 3 casos. Seção 5.
+5. **Simulação:** E1 varia V de 10³ a 10⁷ (9 tamanhos); E2 varia n de 4 a 1024 (9 tamanhos) nos 3 casos. E3 varia n de 4 a 256 (7 tamanhos), com 20 entradas distintas e V próximo de 10.000. Seção 5.
 6. **Gráficos e tabelas:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos e memória. Seção 6.
 7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP (o certificado são as quantidades) e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial**: polinomial no valor de V, exponencial no número de dígitos de V, então não prova que o problema está em P. **Problema vizinho:** troco no caso geral (moedas arbitrárias, V em binário), NP-difícil no sentido fraco; já o troco num sistema canônico fixo, como o real, está em P (guloso O(n)). O guloso não tem garantia de aproximação: em {1, k, k+1} com V = 2k usa k moedas contra 2. Seção 7.
+
+## Caso médio ampliado (E3)
+
+O comando `python scripts/estudar_caso_medio.py` executa as quatro implementações em **140 entradas**: n = 4, 8, 16, 32, 64, 128 e 256, com **20 valores V distintos por tamanho** e **20 repetições por entrada**. O gerador usa uma RNG independente (semente 2027), amostragem uniforme sem reposição em um intervalo de 10·n inteiros alinhado a múltiplos de n, próximo de V = 10.000. A população possui distribuição uniforme de V mod n; uma amostra finita pode se afastar da esperança (n+1)/2.
+
+- [Dados brutos e ambiente](resultados/caso_medio/): 11.200 medições, quatro implementações nas mesmas entradas.
+- [Resumo por entrada](resultados/caso_medio/resumo_por_entrada.csv): média e desvio temporal de 20 repetições.
+- [Resumo por tamanho](resultados/caso_medio/resumo_por_tamanho.csv): média das 20 médias; desvio entre entradas e desvio temporal médio em colunas separadas.
+- [Figura do caso médio](graficos/fig7_caso_medio.png): barras indicam desvio **entre entradas**, não intervalo de confiança.
+- [Expoentes ajustados](resultados/caso_medio/ajustes.csv): ajuste log-log das médias por tamanho.
+
+E1/E2 são os experimentos originais. E3 foi executado posteriormente em outro ambiente, descrito no arquivo próprio. Os gráficos comparam linguagens e algoritmos dentro do mesmo experimento; não se calculam razões entre máquinas diferentes. Nesta revisão, os dados anteriores não foram apagados nem sobrescritos. Executar novamente o comando completo substitui os CSV e gráficos gerados pelos novos tempos da máquina; o PDF registra as execuções publicadas e não muda automaticamente.
+
+O modo `--rapido` do E3 usa 3 tamanhos, 2 entradas por tamanho e 3 repetições: serve apenas para conferir a reprodução, **não substitui** o experimento completo exigido pelo professor. O comando completo de `rodar_tudo.py` inclui E3 ao final. A validação rejeita entradas malformadas, falta de implementações, repetições ausentes ou duplicadas, tempos não finitos, metadados inconsistentes e respostas divergentes.
 
 ## Resultados principais
 
@@ -205,7 +225,7 @@ Clique em uma imagem para abrir a pasta com todos os gráficos.
 
 **Limitações:**
 
-- O caso médio experimental usa uma entrada sorteada por tamanho. As 20 repetições medem o ruído temporal dessa entrada, não a média sobre várias entradas.
+- E1/E2 preservam o experimento original, com uma entrada aleatória por tamanho. O estudo E3 amplia o caso médio para 20 entradas distintas em cada um de 7 tamanhos, com 20 repetições por entrada. E3 tem ambiente próprio registrado; seus tempos absolutos não são misturados aos de E1/E2.
 - A PD Java rejeita V negativo ou maior que Integer.MAX_VALUE - 2; mesmo dentro desse intervalo, a tabela precisa caber na memória. O maior V medido foi 10.000.080.
 - Os tempos do guloso Java são custos médios de chamadas em lote, sujeitos a otimizações do JIT; o acumulador não exclui todas essas otimizações. Não são uma medição de latência isolada nem uma comparação universal entre linguagens.
 - Os CSV publicados preservam a execução original descrita no relatório. Os ajustes de validação não modificam as transições da PD; uma nova execução produz seus próprios tempos.

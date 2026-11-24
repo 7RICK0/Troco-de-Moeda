@@ -61,8 +61,8 @@ def passos_teoricos(alg, moedas, V):
     return it
 
 
-def carregar(res):
-    insts = {i["id"]: i for arq in glob.glob(os.path.join(RAIZ, "entradas", "bench_*.txt"))
+def carregar(res, entradas=None):
+    insts = {i["id"]: i for arq in glob.glob(os.path.join(entradas or os.path.join(RAIZ, "entradas"), "bench_*.txt"))
              for i in ler_instancias(arq)}
     grupos = {}
     for arq in glob.glob(os.path.join(res, "tempos_*.csv")):

@@ -12,6 +12,9 @@ import unittest
 RAIZ = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(RAIZ, "src", "python"))
 
+sys.path.insert(0, os.path.join(RAIZ, "scripts"))
+from validar_resultados import validar_cobertura_resultados
+
 from troco import ler_instancias, troco_guloso, troco_pd  # noqa: E402
 
 ENTRADAS = os.path.join(RAIZ, "entradas")
@@ -52,7 +55,7 @@ def tabela_pd(moedas, limite):
 def respostas_java(arquivo, *filtros):
     os.makedirs(BUILD, exist_ok=True)
     fontes = glob.glob(os.path.join(RAIZ, "src", "java", "*.java"))
-    subprocess.run(["javac", "-d", BUILD] + fontes, check=True)
+    subprocess.run(["javac", "-encoding", "UTF-8", "-d", BUILD] + fontes, check=True)
     saida = os.path.join(BUILD, "respostas_" + os.path.basename(arquivo) + ".csv")
     subprocess.run(["java", "-cp", BUILD, "Medir", "respostas", arquivo, saida] + list(filtros),
                    check=True)
@@ -141,29 +144,6 @@ class TestJavaIgualPython(unittest.TestCase):
                 self.assertEqual(r, java[(id_, "pd")], f"{arq} {id_}")
 
 
-def validar_cobertura_resultados(arquivos, instancias, repeticoes=20):
-    """Exige as quatro implementações e todas as repetições de cada entrada."""
-    esperados = {(i["id"], ling, alg)
-                 for i in instancias
-                 for ling in ("python", "java") for alg in ("guloso", "pd")}
-    encontrados = {}
-    respostas = {}
-    for arq in arquivos:
-        with open(arq, encoding="utf-8") as f:
-            for r in csv.DictReader(f):
-                chave = (r["id"], r["linguagem"], r["algoritmo"])
-                rep = int(r["rep"])
-                reps = encontrados.setdefault(chave, set())
-                if rep in reps:
-                    raise AssertionError(f"repetição duplicada: {chave}, {rep}")
-                reps.add(rep)
-                respostas.setdefault(r["id"], set()).add(int(r["resposta"]))
-    if set(encontrados) != esperados:
-        raise AssertionError("cobertura incompleta ou inesperada das quatro implementações")
-    if any(reps != set(range(repeticoes)) for reps in encontrados.values()):
-        raise AssertionError("repetições ausentes ou inesperadas")
-    if any(len(valores) != 1 for valores in respostas.values()):
-        raise AssertionError("respostas divergentes nas implementações")
 
 
 class TestResultadosMedidos(unittest.TestCase):
@@ -222,7 +202,7 @@ public class Limites {
     }
 }
 """)
-            subprocess.run(["javac", "-d", pasta] + fontes + [fonte], check=True)
+            subprocess.run(["javac", "-encoding", "UTF-8", "-d", pasta] + fontes + [fonte], check=True)
             subprocess.run(["java", "-cp", pasta, "Limites"], check=True)
 
 

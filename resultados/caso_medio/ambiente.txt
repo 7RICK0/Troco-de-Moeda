@@ -1,0 +1,7 @@
+CPU: model name	: AMD EPYC 9V45 96-Core Processor
+RAM: 9.7 GiB
+Sistema operacional: Linux-6.18.57-x86_64-with-glibc2.41
+Plano de energia: n/d
+Python: CPython 3.12.14 (sem flags)
+Java (execução): openjdk version "21.0.13" 2026-10-20
+Java (compilador): javac 21.0.13 (flags: -encoding UTF-8; JIT padrão da JVM)

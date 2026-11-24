@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Medição das implementações em Java.
@@ -27,12 +29,13 @@ public final class Medir {
     static final int AQUECIMENTO = 5;            // lotes descartados (JIT)
     static final String[] ALGORITMOS = {"guloso", "pd"};
 
-    static volatile long sink; // impede o JIT de descartar as chamadas
+    static volatile long sink; // consome os resultados; não exclui toda otimização do JIT
 
     record Instancia(String id, String experimento, String caso, int V, int n, int[] moedas) {}
 
     static List<Instancia> ler(String caminho, long maxV, long maxN) throws IOException {
         List<Instancia> lista = new ArrayList<>();
+        Set<String> ids = new HashSet<>();
         try (BufferedReader br = Files.newBufferedReader(Paths.get(caminho), StandardCharsets.UTF_8)) {
             String linha;
             while ((linha = br.readLine()) != null) {
@@ -41,15 +44,19 @@ public final class Medir {
                     continue;
                 }
                 String[] p = linha.split("\\s+");
+                if (p.length < 5) throw new IllegalArgumentException("cabeçalho incompleto");
                 int V = Integer.parseInt(p[3]);
                 int n = Integer.parseInt(p[4]);
-                if (V > maxV || n > maxN) {
-                    continue;
-                }
+                if (V < 0 || V > Integer.MAX_VALUE - 2 || n < 1 || p.length != 5 + n)
+                    throw new IllegalArgumentException("V, n ou quantidade de moedas inválidos");
+                if (!ids.add(p[0])) throw new IllegalArgumentException("identificador duplicado");
                 int[] moedas = new int[n];
                 for (int i = 0; i < n; i++) {
                     moedas[i] = Integer.parseInt(p[5 + i]);
+                    if (moedas[i] <= 0 || (i > 0 && moedas[i] >= moedas[i - 1]))
+                        throw new IllegalArgumentException("moedas devem ser positivas, distintas e decrescentes");
                 }
+                if (V > maxV || n > maxN) continue;
                 lista.add(new Instancia(p[0], p[1], p[2], V, n, moedas));
             }
         }
@@ -120,6 +127,9 @@ public final class Medir {
     static void modoMemoria(List<Instancia> lista, String saida) throws IOException {
         com.sun.management.ThreadMXBean bean =
                 (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();
+        if (!bean.isThreadAllocatedMemorySupported())
+            throw new UnsupportedOperationException("JVM sem medição de bytes alocados por thread");
+        if (!bean.isThreadAllocatedMemoryEnabled()) bean.setThreadAllocatedMemoryEnabled(true);
         long tid = Thread.currentThread().threadId();
         sink += Troco.guloso(new int[] {1}, 1) + Troco.pd(new int[] {1}, 1); // carrega as classes antes de medir
         try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(Paths.get(saida), StandardCharsets.UTF_8))) {
@@ -154,6 +164,8 @@ public final class Medir {
             System.err.println("uso: java Medir <tempo|memoria|respostas> <instancias> <saida.csv> [--reps R] [--max-V X] [--max-n Y]");
             System.exit(2);
         }
+        if ((args.length - 3) % 2 != 0)
+            throw new IllegalArgumentException("cada opção exige um valor");
         int reps = 20;
         long maxV = Long.MAX_VALUE;
         long maxN = Long.MAX_VALUE;
@@ -165,7 +177,10 @@ public final class Medir {
                 default -> throw new IllegalArgumentException("opção desconhecida: " + args[i]);
             }
         }
+        if (reps < 1 || maxV < 0 || maxN < 1)
+            throw new IllegalArgumentException("repetições e limites inválidos");
         List<Instancia> lista = ler(args[1], maxV, maxN);
+        if (lista.isEmpty()) throw new IllegalArgumentException("nenhuma entrada selecionada");
         switch (args[0]) {
             case "tempo" -> modoTempo(lista, args[2], reps);
             case "memoria" -> modoMemoria(lista, args[2]);

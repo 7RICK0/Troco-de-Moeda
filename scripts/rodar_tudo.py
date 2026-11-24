@@ -57,7 +57,7 @@ def registrar_ambiente(pasta):
         f"Plano de energia: {energia}",
         f"Python: {platform.python_implementation()} {platform.python_version()} (sem flags)",
         f"Java (execução): {saida_cmd(['java', '-version']).splitlines()[0]}",
-        f"Java (compilador): {saida_cmd(['javac', '-version'])} (flags: nenhuma; JIT HotSpot padrão)",
+        f"Java (compilador): {saida_cmd(['javac', '-version'])} (flags: -encoding UTF-8; JIT padrão da JVM)",
     ]
     with open(os.path.join(pasta, "ambiente.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(linhas) + "\n")
@@ -80,9 +80,9 @@ def main():
     os.makedirs(os.path.join(RAIZ, res), exist_ok=True)
     os.makedirs(os.path.join(RAIZ, gra), exist_ok=True)
 
-    rodar([PY, "scripts/gerar_entradas.py"])
-    rodar(["javac", "-d", "build"] + sorted(glob.glob(os.path.join("src", "java", "*.java"))))
     rodar([PY, "-m", "unittest", "discover", "-s", "testes", "-v"])
+    rodar([PY, "scripts/gerar_entradas.py"])
+    rodar(["javac", "-encoding", "UTF-8", "-d", "build"] + sorted(glob.glob(os.path.join("src", "java", "*.java"))))
     registrar_ambiente(os.path.join(RAIZ, res))
 
     for exp in ("V", "n"):
@@ -95,7 +95,8 @@ def main():
     rodar([PY, "scripts/analisar_sistemas.py", "--saida", f"{res}/sistemas_aleatorios.csv"])
     rodar([PY, "scripts/graficos.py", "--resultados", res, "--graficos", gra])
     if not a.rapido:
-        rodar([PY, "-m", "unittest", "testes.test_troco.TestResultadosMedidos", "-v"])
+        rodar([PY, "-m", "unittest", "testes.test_troco.TestResultadosMedidos.test_respostas_iguais_nos_csv", "-v"])
+    rodar([PY, "scripts/estudar_caso_medio.py"] + (["--rapido"] if a.rapido else []))
     print(f"\nPronto. Resultados em {res}/ e gráficos em {gra}/")
 
 
