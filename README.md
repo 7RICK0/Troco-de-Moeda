@@ -46,13 +46,13 @@ Pagar um valor V usando o **menor número possível de moedas**. Comparamos duas
 
 ## Respostas aos requisitos
 
-1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.
-2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) com a ordenação. PD O(n·V), Θ(n·V) com as moedas ≤ V/2, e espaço Θ(V). Seção 2.
-3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = n iterações; médio (n+1)/2 iterações no sistema {1,…,n}. A PD faz o mesmo trabalho para C e V fixos. Seção 3.
-4. **Aplicabilidade:** guloso em sistemas em que ele acerta (real, euro, dólar), com qualquer V; PD em sistemas arbitrários com V moderado. Seção 4.
-5. **Simulação:** E1 varia V de 10³ a 10⁷; E2 varia n de 4 a 1024 nos 3 casos; E3 mede o caso médio com 20 entradas por tamanho. Seções 5 e 12.
-6. **Gráficos:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos, memória e caso médio. Seções 6 e 12.
-7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial** (polinomial no valor de V, exponencial no número de dígitos), então não prova que o problema está em P. **Problema vizinho:** no caso geral o troco é NP-difícil no sentido fraco; num sistema canônico fixo, como o real, está em P (guloso O(n)). O guloso não tem garantia de aproximação: em {1, k, k+1} com V = 2k usa k moedas contra 2. Seção 7.
+1. **Problema e algoritmos:** guloso (maior moeda primeiro, com divisão inteira) e PD (`dp[v] = min(dp[v−c] + 1)`). Relatório, seção 1.1.
+2. **Classificação:** guloso O(n) e Ω(1) no laço (Θ(n) no pior caso, Θ(1) no melhor), O(n log n) com a ordenação. PD O(n·V), Θ(n·V) com as moedas ≤ V/2, e espaço Θ(V). Seção 1.2.
+3. **Casos:** guloso melhor = V múltiplo da maior moeda (1 iteração); pior = n iterações; médio (n+1)/2 iterações no sistema {1,…,n}. A PD faz o mesmo trabalho para C e V fixos. Seção 1.3.
+4. **Aplicabilidade:** guloso em sistemas em que ele acerta (real, euro, dólar), com qualquer V; PD em sistemas arbitrários com V moderado. Seção 1.4.
+5. **Simulação:** E1 varia V de 10³ a 10⁷; E2 varia n de 4 a 1024 nos 3 casos; E3 mede o caso médio com 20 entradas por tamanho. Seções 2.1 e 2.7.
+6. **Gráficos:** teórico × medido, algoritmo × algoritmo, linguagem × linguagem, casos, memória e caso médio. Seção 2.
+7. **P × NP:** a decisão "dá para pagar V com ≤ k moedas?" está em NP e é NP-completa (Lueker, 1975). A PD é **pseudopolinomial** (polinomial no valor de V, exponencial no número de dígitos), então não prova que o problema está em P. **Problema vizinho:** no caso geral o troco é NP-difícil no sentido fraco; num sistema canônico fixo, como o real, está em P (guloso O(n)). O guloso não tem garantia de aproximação: em {1, k, k+1} com V = 2k usa k moedas contra 2. Seção 1.5.
 
 ## Resultados principais
 
@@ -74,7 +74,7 @@ Tempo médio por chamada no E1 (moedas do real em centavos, n = 13, 20 repetiç�
 - Guloso: tempo constante em V (expoente 0,00 / 0,05).
 - Na PD o Python foi de 125 a 204 vezes mais lento que o Java. A constante muda; o expoente, não.
 
-**Limitações:** os tempos absolutos dependem da máquina (E1/E2 na seção 8 do relatório, E3 na seção 12); a PD em Python vai até V = 10⁷ por tempo e memória; o guloso só foi medido em sistemas em que ele acerta; os tempos do guloso Java são médias de chamadas em lote, sujeitas a otimizações do JIT.
+**Limitações:** os tempos absolutos dependem da máquina (E1/E2 na seção 3 do relatório, E3 na seção 2.7); a PD em Python vai até V = 10⁷ por tempo e memória; o guloso só foi medido em sistemas em que ele acerta; os tempos do guloso Java são médias de chamadas em lote, sujeitas a otimizações do JIT.
 
 ## Como reproduzir
 
@@ -116,20 +116,52 @@ V_medio_00 E1 medio 1016 13 20000 10000 5000 2000 1000 500 200 100 50 25 10 5 1
 
 As moedas vêm em ordem **decrescente**, positivas e distintas, e V fica entre 0 e 2³¹ − 3. A resposta é o número de moedas, ou `-1` se não há solução.
 
-## Pastas
+## Arquitetura do projeto
+
+O caminho dos dados: `gerar_entradas` cria as entradas → as 4 implementações medem → os CSV vão para `resultados/` → `graficos` gera tabelas e figuras → relatório e slides usam esses números.
 
 ```
 .
-├── src/python/     troco.py (guloso e PD) e medir.py (tempo e memória)
-├── src/java/       Troco.java (guloso e PD) e Medir.java (tempo e memória)
-├── scripts/        gerar_entradas, rodar_tudo, graficos, analisar_sistemas, estudar_caso_medio, validar_resultados
-├── testes/         test_troco.py (corretude) e test_experimentos.py (E3 e validação dos CSV)
-├── entradas/       instâncias lidas pelas 4 implementações (E1, E2, E3, contraexemplos, aleatórias)
-├── resultados/     CSV de tempo e memória, resumo, ajustes, ambiente.txt; caso_medio/ (E3)
-├── graficos/       fig1 a fig7, as figuras do relatório
-├── relatorio/      relatório em PDF e miniatura usada neste README
-├── slides/         slides da apresentação em PDF
-└── .github/        testes automáticos a cada push
+├── src/                          os algoritmos e os medidores
+│   ├── python/
+│   │   ├── troco.py              guloso e PD em Python; leitura dos arquivos de entrada
+│   │   └── medir.py              mede tempo (em lotes, 20 repetições) e memória (tracemalloc) em Python
+│   └── java/
+│       ├── Troco.java            guloso e PD em Java
+│       └── Medir.java            mede tempo (em lotes, com aquecimento do JIT) e memória em Java
+│
+├── scripts/                      tudo o que gera, roda e analisa
+│   ├── rodar_tudo.py             reproduz o projeto inteiro (ou --rapido, cerca de 1 min)
+│   ├── gerar_entradas.py         cria os arquivos de entrada com semente fixa
+│   ├── graficos.py               calcula médias, desvios e expoentes; gera fig1 a fig6
+│   ├── analisar_sistemas.py      sorteia sistemas de moedas e conta quantos fazem o guloso errar
+│   ├── estudar_caso_medio.py     E3: mede o caso médio com 20 entradas por tamanho; gera fig7
+│   └── validar_resultados.py     confere se os CSV estão completos e coerentes
+│
+├── testes/                       testes automáticos
+│   ├── test_troco.py             corretude: as 4 implementações dão a mesma resposta
+│   └── test_experimentos.py      validação das entradas, do E3 e dos CSV
+│
+├── entradas/                     as instâncias lidas pelas 4 implementações
+│   ├── bench_V.txt               E1: V de 10³ a 10⁷ com as moedas do real
+│   ├── bench_n.txt               E2: n de 4 a 1.024, melhor, médio e pior caso
+│   ├── bench_medio.txt           E3: 140 entradas sorteadas para o caso médio
+│   ├── contraexemplos.txt        sistemas em que o guloso erra
+│   └── aleatorias.txt            instâncias pequenas para os testes de corretude
+│
+├── resultados/                   os dados medidos (CSV)
+│   ├── tempos_*.csv              tempo de cada repetição, por linguagem e experimento
+│   ├── memoria_*.csv             memória de cada chamada
+│   ├── resumo.csv, ajustes.csv   médias, desvios e expoentes calculados
+│   ├── sistemas_aleatorios.csv   com que frequência o guloso erra
+│   ├── ambiente.txt              máquina, sistema e versões usadas em E1/E2
+│   └── caso_medio/               dados e ambiente do E3
+│
+├── graficos/                     fig1 a fig7 (as figuras do relatório)
+├── relatorio/                    relatório em PDF e miniatura da capa
+├── slides/                       slides da apresentação em PDF e miniatura
+├── .github/workflows/testes.yml  roda os testes a cada push
+└── requirements.txt              bibliotecas Python (matplotlib, numpy)
 ```
 
 ## Extras do projeto
@@ -152,4 +184,4 @@ As moedas vêm em ordem **decrescente**, positivas e distintas, e V fica entre 0
 | João Luiz | Dupla 2: experimentos e validação | Participou da preparação das entradas, da execução dos testes e das medições de tempo e memória; conferiu as respostas entre as linguagens; documentou o ambiente e a reprodução. |
 | Júlio Cesar | Dupla 2: experimentos e validação | Participou da execução dos casos de teste e da conferência dos dados; organizou tabelas e gráficos; preparou os slides sobre os testes e os resultados. |
 
-A declaração de uso de IA está na seção 10 do [relatório](relatorio/relatorio_troco_de_moedas_v1.pdf).
+A declaração de uso de IA está na seção 5 do [relatório](relatorio/relatorio_troco_de_moedas_v1.pdf).
