@@ -131,44 +131,44 @@ O caminho dos dados: `gerar_entradas` cria as entradas → as 4 implementações
 │       └── Medir.java            mede tempo (em lotes, com aquecimento do JIT) e memória em Java
 │
 ├── scripts/                      tudo o que gera, roda e analisa
-│   ├── rodar_tudo.py             reproduz o projeto inteiro (ou --rapido, cerca de 1 min)
-│   ├── gerar_entradas.py         cria os arquivos de entrada com semente fixa
-│   ├── graficos.py               calcula médias, desvios e expoentes; gera fig1 a fig6
-│   ├── analisar_sistemas.py      sorteia sistemas de moedas e conta quantos fazem o guloso errar
-│   ├── estudar_caso_medio.py     E3: mede o caso médio com 20 entradas por tamanho; gera fig7
-│   └── validar_resultados.py     confere se os CSV estão completos e coerentes
+│   ├── rodar_tudo.py            
+│   ├── gerar_entradas.py         
+│   ├── graficos.py               
+│   ├── analisar_sistemas.py     
+│   ├── estudar_caso_medio.py     
+│   └── validar_resultados.py     
 │
 ├── testes/                       testes automáticos
-│   ├── test_troco.py             corretude: as 4 implementações dão a mesma resposta
-│   └── test_experimentos.py      validação das entradas, do E3 e dos CSV
+│   ├── test_troco.py             
+│   └── test_experimentos.py      
 │
 ├── entradas/                     as instâncias lidas pelas 4 implementações
-│   ├── bench_V.txt               E1: V de 10³ a 10⁷ com as moedas do real
-│   ├── bench_n.txt               E2: n de 4 a 1.024, melhor, médio e pior caso
-│   ├── bench_medio.txt           E3: 140 entradas sorteadas para o caso médio
+│   ├── bench_V.txt               
+│   ├── bench_n.txt              
+│   ├── bench_medio.txt           
 │   ├── contraexemplos.txt        sistemas em que o guloso erra
 │   └── aleatorias.txt            instâncias pequenas para os testes de corretude
 │
 ├── resultados/                   os dados medidos (CSV)
-│   ├── tempos_*.csv              tempo de cada repetição, por linguagem e experimento
-│   ├── memoria_*.csv             memória de cada chamada
+│   ├── tempos_*.csv              
+│   ├── memoria_*.csv             
 │   ├── resumo.csv, ajustes.csv   médias, desvios e expoentes calculados
 │   ├── sistemas_aleatorios.csv   com que frequência o guloso erra
 │   ├── ambiente.txt              máquina, sistema e versões usadas em E1/E2
 │   └── caso_medio/               dados e ambiente do E3
 │
-├── graficos/                     fig1 a fig7 (as figuras do relatório)
-├── relatorio/                    relatório em PDF e miniatura da capa
-├── slides/                       slides da apresentação em PDF e miniatura
+├── graficos/                     
+├── relatorio/                   
+├── slides/                      
 ├── .github/workflows/testes.yml  roda os testes a cada push
-└── requirements.txt              bibliotecas Python (matplotlib, numpy)
+└── requirements.txt              
 ```
 
 ## Extras do projeto
 
 | Extra | Por quê |
 |---|---|
-| Medição de memória e comparação com Θ(V) | Bônus previsto no enunciado |
+| Medição de memória e comparação com Θ(V) | Bônus |
 | Caso médio ampliado (E3): 20 entradas por tamanho | Mede a média de verdade, em vez de um único sorteio |
 | Análise de sistemas aleatórios | Mostra com que frequência o guloso erra (item 4) |
 | Verificação de canonicidade (Kozen e Zaks) e testes automáticos no GitHub | Garante que as 4 implementações dão a mesma resposta |
